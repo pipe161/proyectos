@@ -1,0 +1,27 @@
+{
+  "fecha": "2026-03-18",
+  "turno": "Tarde",
+  "indicativo": "LATINA-30",
+  "vehiculo": "2074BC",
+  "funcionarios": [
+    {
+      "nombre": "LUIS FELIPE HERNANDEZ ROSA",
+      "cp": "149893",
+      "equipo": "442",
+      "flagPracticas": false,
+      "flagResponsable": true,
+      "telefono": "666666666"
+    },
+    {
+      "nombre": "Don uno",
+      "cp": "11111",
+      "equipo": "111",
+      "flagPracticas": false,
+      "flagResponsable": false,
+      "telefono": ""
+    }
+  ],
+  "servicios": [],
+  "filiacion": [],
+  "objetos": []
+}

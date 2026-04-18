@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Multi-tablas Excel con Formato</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; padding: 50px; background-color: #f0f2f5; }
+        .container { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: inline-block; }
+        button { 
+            padding: 15px 30px; background-color: #107c41; color: white; border: none; 
+            border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold;
+        }
+        button:hover { background-color: #0b592e; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Reporte Multi-Tabla</h1>
+        <p>Genera un Excel con tablas en <b>C6</b> y <b>H50</b></p>
+        <button id="btnGenerar">Descargar Excel Personalizado</button>
+    </div>
+
+    <script>
+        // DATOS JSON
+        const jsonVentas = [
+            { producto: "Laptop", total: 1500 },
+            { producto: "Mouse", total: 25 },
+            { producto: "Teclado", total: 80 }
+        ];
+
+        const jsonGastos = [
+            { concepto: "Alquiler", monto: 1200 },
+            { concepto: "Luz", monto: 150 },
+            { concepto: "Internet", monto: 50 }
+        ];
+
+        document.getElementById('btnGenerar').addEventListener('click', async () => {
+            const workbook = new ExcelJS.Workbook();
+            const sheet = workbook.addWorksheet('Dashboard');
+
+            // --- TABLA 1: VENTAS (Inicia en C6) ---
+            const startRowVentas = 6;
+            const startColVentas = 3; // C es la columna 3
+
+            // Encabezados Tabla 1
+            const headerVentas = ["PRODUCTO", "TOTAL €"];
+            headerVentas.forEach((txt, i) => {
+                const cell = sheet.getCell(startRowVentas, startColVentas + i);
+                cell.value = txt;
+                estilizarEncabezado(cell, 'FF4472C4'); // Azul
+            });
+
+            // Datos Tabla 1
+            jsonVentas.forEach((item, index) => {
+                const rowIdx = startRowVentas + 1 + index;
+                sheet.getCell(rowIdx, startColVentas).value = item.producto;
+                sheet.getCell(rowIdx, startColVentas + 1).value = item.total;
+                aplicarBordes(sheet.getRow(rowIdx), startColVentas, 2);
+            });
+
+
+            // --- TABLA 2: GASTOS (Inicia en H50) ---
+            const startRowGastos = 50;
+            const startColGastos = 8; // H es la columna 8
+
+            // Encabezados Tabla 2
+            const headerGastos = ["CONCEPTO", "MONTO"];
+            headerGastos.forEach((txt, i) => {
+                const cell = sheet.getCell(startRowGastos, startColGastos + i);
+                cell.value = txt;
+                estilizarEncabezado(cell, 'FFC00000'); // Rojo
+            });
+
+            // Datos Tabla 2
+            jsonGastos.forEach((item, index) => {
+                const rowIdx = startRowGastos + 1 + index;
+                sheet.getCell(rowIdx, startColGastos).value = item.concepto;
+                sheet.getCell(rowIdx, startColGastos + 1).value = item.monto;
+                aplicarBordes(sheet.getRow(rowIdx), startColGastos, 2);
+            });
+
+            // Ajustar ancho de columnas manualmente
+            sheet.getColumn(3).width = 20; // Columna C
+            sheet.getColumn(8).width = 20; // Columna H
+
+            // Guardar
+            const buffer = await workbook.xlsx.writeBuffer();
+            saveAs(new Blob([buffer]), "Reporte_Complejo.xlsx");
+        });
+
+        // FUNCIONES DE ESTILO REUTILIZABLES
+        function estilizarEncabezado(cell, color) {
+            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: color } };
+            cell.font = { color: { argb: 'FFFFFFFF' }, bold: true, size: 12 };
+            cell.alignment = { horizontal: 'center' };
+            cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} };
+        }
+
+        function aplicarBordes(row, startCol, numCols) {
+            for(let i = 0; i < numCols; i++) {
+                const cell = row.getCell(startCol + i);
+                cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} };
+            }
+        }
+    </script>
+</body>
+</html>

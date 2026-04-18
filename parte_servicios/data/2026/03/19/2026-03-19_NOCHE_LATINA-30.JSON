@@ -1,0 +1,27 @@
+{
+  "fecha": "2026-03-19",
+  "turno": "Noche",
+  "indicativo": "LATINA-30",
+  "vehiculo": "2075BC",
+  "funcionarios": [
+    {
+      "nombre": "Don uno",
+      "cp": "11111",
+      "equipo": "111",
+      "flagPracticas": false,
+      "flagResponsable": false,
+      "telefono": ""
+    },
+    {
+      "nombre": "ALVARO CERVERA",
+      "cp": "134998",
+      "equipo": "443",
+      "flagPracticas": false,
+      "flagResponsable": true,
+      "telefono": "678994310"
+    }
+  ],
+  "servicios": [],
+  "filiacion": [],
+  "objetos": []
+}

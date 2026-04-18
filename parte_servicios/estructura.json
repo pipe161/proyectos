@@ -1,0 +1,63 @@
+{
+  "fecha": "",
+  "turno": "",
+  "horario": "",
+  "indicativo": "",
+  "vehiculo": "",
+  "funcionarios": [
+    {
+      "nombre": "",
+      "cp": "",
+      "equipo": "",
+      "flagPracticas": false,
+      "flagResponsable": false,
+      "telefono": ""
+    }
+  ],
+  "servicios": [
+    {
+      "origen": "",
+      "motivo": "",
+      "horaInicio": "",
+      "horaFin": "",
+      "lugar": "",
+      "resultado": ""
+    }
+  ],
+  "filiacion": [
+    {
+      "documento": "",
+      "nombre": "",
+      "apellidos": "",
+      "fechaNac": "",
+      "codigo": "",
+      "lugarFiliacion": "",
+      "fechaFiliacion": "",
+      "antecedentes": [
+        {
+          "tipo": "rcf",
+          "fechaUltimo": "2020"
+        },
+        {
+          "tipo": "rcv",
+          "fechaUltimo": "2020"
+        },
+        {
+          "tipo": "hurto",
+          "fechaUltimo": "2021"
+        }
+      ],
+      "detenido": [{ "atestado": "", "motivo": "" }],
+      "sancionado": [{ "acta": "", "motivo": "" }]
+    }
+  ],
+  "objetos": [
+    {
+      "id": "",
+      "marca": "",
+      "modelo": "",
+      "filiadoRel": "",
+      "cod": ""
+    }
+  ]
+}

@@ -1,0 +1,1027 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulario B&N - Parte de Servicio</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="header-container"></div>
+
+    <script>
+      fetch("header.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("header-container").innerHTML = data;
+        });
+
+      function abrirMenu() {
+        document.getElementById("sidebar").classList.add("active");
+        document.getElementById("overlay").classList.add("active");
+      }
+      function cerrarMenu() {
+        document.getElementById("sidebar").classList.remove("active");
+        document.getElementById("overlay").classList.remove("active");
+      }
+    </script>
+
+    <h1 class="titulo-pagina">Parte de servicio</h1>
+
+    <div class="top-bar">
+      <div class="search-container">
+        <select id="turno" onchange="removerError('turno')">
+          <option value="">Turno</option>
+        </select>
+        <div id="errorBusqueda-turno"></div>
+      </div>
+
+      <div class="search-container">
+        <select id="indicativo" onchange="removerError('indicativo')">
+          <option value="">Indicativo</option>
+        </select>
+        <div id="errorBusqueda-indicativo"></div>
+      </div>
+
+      <div class="search-container">
+        <input
+          type="text"
+          id="vehiculo"
+          placeholder="Vehículo"
+          oninput="removerError('vehiculo')"
+        />
+        <div id="errorBusqueda-vehiculo"></div>
+      </div>
+
+      <button id="btn-alta" class="btn-enviar" onclick="validarYEjecutar()">
+        Dar de alta
+      </button>
+
+      <div
+        id="error-general"
+        style="
+          color: red;
+          font-weight: bold;
+          margin-top: 15px;
+          width: 100%;
+          text-align: center;
+        "
+      ></div>
+    </div>
+
+    <div class="container" id="main-container" style="display: none">
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleSection('sec1')">
+          <span class="header-title">Funcionarios</span>
+          <span class="record-badge" id="count-funcionarios">0</span>
+          <span class="accordion-icon" style="margin-left: 15px">▼</span>
+        </div>
+        <div id="sec1" class="accordion-content">
+          <table class="info-table" id="tabla-funcionarios">
+            <thead>
+              <tr>
+                <th>Nombre y apellidos</th>
+                <th>Carné</th>
+                <th>Equipo</th>
+                <th style="width: 80px">Acciones</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div class="form-box">
+            <span class="form-box-title">Nuevo funcionario</span>
+            <input type="hidden" id="edit-index-sec1" value="-1" />
+            <div class="input-row">
+              <div class="search-container w-15">
+                <div style="display: flex; gap: 5px">
+                  <input
+                    id="cp"
+                    type="text"
+                    placeholder="Carné"
+                    oninput="removerError('cp')"
+                  />
+                  <button class="btn-buscar" onclick="buscarFuncionario()">
+                    Buscar
+                  </button>
+                </div>
+                <div id="errorBusqueda-cp"></div>
+              </div>
+              <div class="search-container w-50">
+                <input
+                  id="nombre"
+                  type="text"
+                  placeholder="Nombre y apellidos"
+                  oninput="removerError('nombre')"
+                />
+                <div id="errorBusqueda-nombre"></div>
+              </div>
+              <div class="search-container w-10">
+                <input
+                  id="equipo"
+                  type="text"
+                  placeholder="Equipo"
+                  oninput="removerError('equipo')"
+                  style="width: 40%"
+                />
+                <div id="errorBusqueda-equipo"></div>
+              </div>
+              <label class="checkbox-row"
+                ><input id="flagPracticas" type="checkbox" /> PP</label
+              >
+              <label class="checkbox-row"
+                ><input
+                  id="flagResponsable"
+                  type="checkbox"
+                  onchange="
+                    document.getElementById('telefono').disabled = !this.checked
+                  "
+                />
+                Responsable</label
+              >
+              <input
+                id="telefono"
+                type="text"
+                placeholder="Teléfono"
+                class="w-15"
+                disabled
+              />
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <button class="btn-enviar" id="btn-sec1" onclick="enviarDatos()">
+                Añadir funcionario
+              </button>
+              <button class="btn-limpiar" onclick="limpiarForm('sec1')">
+                Limpiar
+              </button>
+              <div id="msg-sec1" class="success-msg">✓ Guardado</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleSection('sec2')">
+          <span class="header-title">Servicios</span>
+          <span class="record-badge" id="count-servicios">0</span>
+          <span class="accordion-icon" style="margin-left: 15px">▼</span>
+        </div>
+        <div id="sec2" class="accordion-content">
+          <table class="info-table" id="tabla-servicios">
+            <thead>
+              <tr>
+                <th>Origen</th>
+                <th>Motivo</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Lugar</th>
+                <th>Resultado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div class="form-box">
+            <span class="form-box-title">Nuevo servicio</span>
+            <input type="hidden" id="edit-index-sec2" value="-1" />
+            <div class="input-row">
+              <div class="search-container w-30">
+                <input
+                  list="origen"
+                  id="origen-input"
+                  placeholder="Origen"
+                  oninput="removerError('origen-input')"
+                />
+                <datalist id="origen"></datalist>
+                <div id="errorBusqueda-origen-input"></div>
+              </div>
+              <div class="search-container w-40">
+                <input
+                  list="motivo"
+                  id="motivo-input"
+                  placeholder="Motivo"
+                  oninput="removerError('motivo-input')"
+                />
+                <datalist id="motivo"></datalist>
+                <div id="errorBusqueda-motivo-input"></div>
+              </div>
+              <input
+                type="time"
+                id="horaInicio-input"
+                class="w-15"
+                onchange="removerError('horaInicio-input')"
+              />
+              <input
+                type="time"
+                id="horaFin-input"
+                class="w-15"
+                onchange="removerError('horaFin-input')"
+              />
+            </div>
+            <div class="input-row">
+              <input
+                type="text"
+                id="lugar-input-servicio"
+                class="w-50"
+                placeholder="Lugar"
+                oninput="removerError('lugar-input-servicio')"
+              />
+              <input
+                type="text"
+                id="resultado-input"
+                class="w-50"
+                placeholder="Resultado"
+              />
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <button class="btn-enviar" id="btn-sec2" onclick="enviarDatos()">
+                Añadir servicio
+              </button>
+              <button class="btn-limpiar" onclick="limpiarForm('sec2')">
+                Limpiar
+              </button>
+              <div id="msg-sec2" class="success-msg">✓ Guardado</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleSection('sec3')">
+          <span class="header-title">Identificados</span>
+          <span class="record-badge" id="count-filiacion">0</span>
+          <span class="accordion-icon" style="margin-left: 15px">▼</span>
+        </div>
+        <div id="sec3" class="accordion-content">
+          <table class="info-table" id="tabla-filiacion">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Documento</th>
+                <th>Fecha nac.</th>
+                <th>Código</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div class="form-box">
+            <span class="form-box-title">Nuevo identificado</span>
+            <input type="hidden" id="edit-index-sec3" value="-1" />
+            <div class="input-row">
+              <div class="search-container w-20">
+                <div style="display: flex; gap: 5px">
+                  <input
+                    type="text"
+                    id="fili-doc"
+                    placeholder="Documento"
+                    oninput="removerError('fili-doc')"
+                  />
+                  <button class="btn-buscar" onclick="buscarIdentificado()">
+                    Buscar
+                  </button>
+                </div>
+              </div>
+              <input
+                type="text"
+                id="fili-nombre"
+                class="w-40"
+                placeholder="Nombre"
+                oninput="removerError('fili-nombre')"
+              />
+              <input
+                type="text"
+                id="fili-apellidos"
+                class="w-40"
+                placeholder="Apellidos"
+                oninput="removerError('fili-apellidos')"
+              />
+            </div>
+            <div class="input-row">
+              <input
+                type="date"
+                id="fili-nac"
+                class="w-20"
+                onchange="removerError('fili-nac')"
+              />
+              <select
+                id="codigo"
+                class="w-80"
+                onchange="removerError('codigo')"
+              ></select>
+            </div>
+            <div class="input-row">
+              <input
+                list="lugar"
+                id="lugar-input-fili"
+                placeholder="Lugar de filiación"
+              />
+              <datalist id="lugar"> </datalist>
+            </div>
+
+            <label class="checkbox-row"
+              ><input
+                type="checkbox"
+                id="activarAntecedentes"
+                onchange="toggleInputs('Antecedentes')"
+              />
+              Antecedentes</label
+            >
+            <div
+              id="panelAntecedentes"
+              class="form-group-hidden"
+              style="display: none"
+            >
+              <label class="checkbox-row"
+                ><input type="checkbox" class="check-ant" data-tipo="rcf" />
+                Robos con fuerza</label
+              >
+              <label class="checkbox-row"
+                ><input type="checkbox" class="check-ant" data-tipo="rcv" />
+                Robos con violencia</label
+              >
+              <label class="checkbox-row"
+                ><input type="checkbox" class="check-ant" data-tipo="dcp" />
+                Delitos contra las personas</label
+              >
+              <label class="checkbox-row"
+                ><input type="checkbox" class="check-ant" data-tipo="hurto" />
+                Hurto</label
+              >
+              <label class="checkbox-row"
+                ><input type="checkbox" class="check-ant" data-tipo="salud" />
+                Delitos contra la salud pública</label
+              >
+              <label class="checkbox-row"
+                ><input type="checkbox" class="check-ant" data-tipo="viogen" />
+                Violencia de Género</label
+              >
+            </div>
+
+            <label class="checkbox-row" style="margin-top: 10px"
+              ><input
+                type="checkbox"
+                id="activarDetenido"
+                onchange="toggleInputs('Detenido')"
+              />
+              Detenido</label
+            >
+            <div
+              id="panelDetenido"
+              class="form-group-hidden"
+              style="display: none"
+            >
+              <div class="input-row">
+                <input
+                  type="text"
+                  id="det-atestado"
+                  placeholder="Atestado"
+                  class="w-30"
+                />
+                <input
+                  type="text"
+                  id="det-motivo"
+                  placeholder="Motivo"
+                  class="w-70"
+                />
+              </div>
+            </div>
+
+            <label class="checkbox-row" style="margin-top: 10px"
+              ><input
+                type="checkbox"
+                id="activarSancionado"
+                onchange="toggleInputs('Sancionado')"
+              />
+              Sancionado</label
+            >
+            <div
+              id="panelSancionado"
+              class="form-group-hidden"
+              style="display: none"
+            >
+              <div class="input-row">
+                <input
+                  type="text"
+                  id="san-atestado"
+                  placeholder="Acta"
+                  class="w-30"
+                />
+                <input
+                  type="text"
+                  id="san-motivo"
+                  placeholder="Motivo"
+                  class="w-70"
+                />
+              </div>
+            </div>
+
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-top: 15px;
+              "
+            >
+              <button class="btn-enviar" id="btn-sec3" onclick="enviarDatos()">
+                Añadir identificado
+              </button>
+              <button class="btn-limpiar" onclick="limpiarForm('sec3')">
+                Limpiar
+              </button>
+              <div id="msg-sec3" class="success-msg">✓ Guardado</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleSection('sec4')">
+          <span class="header-title">Vehículos y objetos</span>
+          <span class="record-badge" id="count-objetos">0</span>
+          <span class="accordion-icon" style="margin-left: 15px">▼</span>
+        </div>
+        <div id="sec4" class="accordion-content">
+          <table class="info-table" id="tabla-objetos">
+            <thead>
+              <tr>
+                <th>Placa</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Identificado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div class="form-box">
+            <span class="form-box-title">Nuevo objeto</span>
+            <input type="hidden" id="edit-index-sec4" value="-1" />
+            <div class="input-row">
+              <input
+                type="text"
+                id="obj-id"
+                class="w-20"
+                placeholder="Placa/Serie"
+                oninput="removerError('obj-id')"
+              />
+              <input
+                type="text"
+                id="obj-marca"
+                class="w-20"
+                placeholder="Marca"
+                oninput="removerError('obj-marca')"
+              />
+              <input
+                type="text"
+                id="obj-modelo"
+                class="w-20"
+                placeholder="Modelo"
+                oninput="removerError('obj-modelo')"
+              />
+              <input
+                type="text"
+                id="obj-filiado"
+                class="w-20"
+                placeholder="Filiado"
+              />
+              <select
+                id="codigo-obj"
+                class="w-20"
+                onchange="removerError('codigo-obj')"
+              >
+                <option value="">Código...</option>
+              </select>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <button class="btn-enviar" id="btn-sec4" onclick="enviarDatos()">
+                Añadir objeto
+              </button>
+              <button class="btn-limpiar" onclick="limpiarForm('sec4')">
+                Limpiar
+              </button>
+              <div id="msg-sec4" class="success-msg">✓ Guardado</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let parteServicio = {
+        fecha: getTodayFormatted(),
+        turno: "",
+        indicativo: "",
+        vehiculo: "",
+        funcionarios: [],
+        servicios: [],
+        filiacion: [],
+        objetos: [],
+      };
+
+      async function cargarListas() {
+        try {
+          const res = await fetch("config/listas.json");
+          const listas = await res.json();
+
+          if (listas.turnos) {
+            const el = document.getElementById("turno");
+            el.innerHTML =
+              '<option value="">Turno</option>' +
+              listas.turnos.map((t) => `<option>${t}</option>`).join("");
+          }
+          if (listas.indicativos) {
+            const el = document.getElementById("indicativo");
+            el.innerHTML =
+              '<option value="">Indicativo</option>' +
+              listas.indicativos.map((i) => `<option>${i}</option>`).join("");
+          }
+          if (listas.origenes) {
+            document.getElementById("origen").innerHTML = listas.origenes
+              .map((o) => `<option value="${o}"></option>`)
+              .join("");
+          }
+          if (listas.motivos) {
+            document.getElementById("motivo").innerHTML = listas.motivos
+              .map((m) => `<option value="${m}"></option>`)
+              .join("");
+          }
+          if (listas.lugares) {
+            document.getElementById("lugar").innerHTML = listas.lugares
+              .map((j) => `<option value="${j}"></option>`)
+              .join("");
+          }
+          if (listas.codigos) {
+            document.getElementById("codigo").innerHTML = listas.codigos
+              .map((k) => `<option>${k}</option>`)
+              .join("");
+          }
+          if (listas.codigos) {
+            document.getElementById("codigo-obj").innerHTML = listas.codigosObj
+              .map((k) => `<option>${k}</option>`)
+              .join("");
+          }
+        } catch (e) {
+          console.error("Error cargando listas.json", e);
+        }
+      }
+
+      async function buscarFuncionario() {
+        const cp = document.getElementById("cp").value;
+        if (!cp) return;
+        try {
+          const res = await fetch(`/buscar-funcionario?cp=${cp}`);
+          if (res.ok) {
+            const f = await res.json();
+            document.getElementById("nombre").value = f.nombre || "";
+            document.getElementById("equipo").value = f.equipo || "";
+            document.getElementById("flagPracticas").checked =
+              !!f.flagPracticas;
+            removerError("nombre");
+            removerError("equipo");
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      async function buscarIdentificado() {
+        const doc = document.getElementById("fili-doc").value;
+        if (!doc) return;
+        try {
+          const res = await fetch(`/buscar-identificado?doc=${doc}`);
+          if (res.ok) {
+            const i = await res.json();
+            // Datos básicos
+            document.getElementById("fili-nombre").value = i.nombre || "";
+            document.getElementById("fili-apellidos").value = i.apellidos || "";
+            document.getElementById("fili-nac").value = i.fechaNac || "";
+            document.getElementById("codigo").value = i.codigo || "";
+
+            removerError("fili-nombre");
+            removerError("fili-apellidos");
+            removerError("fili-nac");
+            removerError("codigo");
+
+            // Gestión de Antecedentes
+            const checkAnt = document.getElementById("activarAntecedentes");
+            if (i.antecedentes && i.antecedentes.length > 0) {
+              checkAnt.checked = true;
+              toggleInputs("Antecedentes");
+              // Marcar tipos específicos si existen
+              document.querySelectorAll(".check-ant").forEach((cb) => {
+                cb.checked = i.antecedentes.some(
+                  (ant) => ant.tipo === cb.getAttribute("data-tipo"),
+                );
+              });
+            } else {
+              checkAnt.checked = false;
+              toggleInputs("Antecedentes");
+            }
+
+            // Gestión de Detenido
+            const checkDet = document.getElementById("activarDetenido");
+            if (i.detenido && i.detenido.length > 0) {
+              checkDet.checked = true;
+              toggleInputs("Detenido");
+              document.getElementById("det-atestado").value =
+                i.detenido[0].atestado || "";
+              document.getElementById("det-motivo").value =
+                i.detenido[0].motivo || "";
+            } else {
+              checkDet.checked = false;
+              toggleInputs("Detenido");
+            }
+
+            // Gestión de Sancionado
+            const checkSan = document.getElementById("activarSancionado");
+            if (i.sancionado && i.sancionado.length > 0) {
+              checkSan.checked = true;
+              toggleInputs("Sancionado");
+              document.getElementById("san-atestado").value =
+                i.sancionado[0].acta || "";
+              document.getElementById("san-motivo").value =
+                i.sancionado[0].motivo || "";
+            } else {
+              checkSan.checked = false;
+              toggleInputs("Sancionado");
+            }
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      function getTodayFormatted() {
+        const hoy = new Date();
+        return `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, "0")}-${String(hoy.getDate()).padStart(2, "0")}`;
+      }
+
+      async function verificarParametrosYCargar() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const fichero = urlParams.get("fichero");
+
+        if (fichero) {
+          const partes = fichero.split("_");
+          if (partes.length >= 3) {
+            const fechaURL = partes[0]; // Formato YYYY-MM-DD
+            const fP = fechaURL.split("-");
+
+            try {
+              const res = await fetch(
+                `/obtener-parte?yyyy=${fP[0]}&mm=${fP[1]}&dd=${fP[2]}&turno=${partes[1]}&indicativo=${partes[2]}`,
+              );
+              if (res.ok) {
+                parteServicio = await res.json();
+
+                // Aseguramos que la fecha esté presente en el objeto aunque no viniera en el JSON
+                if (!parteServicio.fecha) {
+                  parteServicio.fecha = fechaURL;
+                }
+
+                document.getElementById("turno").value = parteServicio.turno;
+                document.getElementById("indicativo").value =
+                  parteServicio.indicativo;
+                document.getElementById("vehiculo").value =
+                  parteServicio.vehiculo;
+                document.getElementById("main-container").style.display =
+                  "block";
+
+                if (document.getElementById("btn-alta"))
+                  document.getElementById("btn-alta").style.display = "none";
+
+                renderizarTablas();
+              }
+            } catch (e) {
+              console.error(e);
+            }
+          }
+        } else {
+          // Si no hay fichero por URL, confirmamos que la fecha es la de hoy
+          parteServicio.fecha = getTodayFormatted();
+        }
+      }
+
+      async function sincronizarFichero() {
+        const errorDiv = document.getElementById("error-general");
+        const btnAlta = document.getElementById("btn-alta");
+        const mainContainer = document.getElementById("main-container");
+        errorDiv.innerText = "";
+        try {
+          const res = await fetch("/guardar-parte", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(parteServicio),
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            errorDiv.innerText = data.mensaje || "Error al guardar el parte";
+            mainContainer.style.display = "none";
+            return;
+          }
+          if (btnAlta) btnAlta.style.display = "none";
+          mainContainer.style.display = "block";
+        } catch (e) {
+          errorDiv.innerText = "Error de conexión.";
+          mainContainer.style.display = "none";
+        }
+      }
+
+      function renderizarTablas() {
+        document.getElementById("count-funcionarios").innerText =
+          parteServicio.funcionarios.length;
+        document.querySelector("#tabla-funcionarios tbody").innerHTML =
+          parteServicio.funcionarios
+            .map(
+              (f, i) =>
+                `<tr><td>${f.nombre} ${f.flagPracticas ? '<b style="color:#800020">(PP)</b>' : ""}</td><td>${f.cp}</td><td>${f.equipo}</td><td><button onclick="editarItem('funcionarios', ${i}, 'sec1')">✏️</button><button onclick="eliminarItem('funcionarios', ${i})">🗑️</button></td></tr>`,
+            )
+            .join("");
+
+        document.getElementById("count-servicios").innerText =
+          parteServicio.servicios.length;
+        document.querySelector("#tabla-servicios tbody").innerHTML =
+          parteServicio.servicios
+            .map(
+              (s, i) =>
+                `<tr><td>${s.origen}</td><td>${s.motivo}</td><td>${s.horaInicio}</td><td>${s.horaFin}</td><td>${s.lugar}</td><td>${s.resultado}</td><td><button onclick="editarItem('servicios', ${i}, 'sec2')">✏️</button><button onclick="eliminarItem('servicios', ${i})">🗑️</button></td></tr>`,
+            )
+            .join("");
+
+        document.getElementById("count-filiacion").innerText =
+          parteServicio.filiacion.length;
+        document.querySelector("#tabla-filiacion tbody").innerHTML =
+          parteServicio.filiacion
+            .map(
+              (f, i) =>
+                `<tr><td>${f.apellidos}, ${f.nombre}</td><td>${f.documento}</td><td>${f.fechaNac}</td><td>${f.codigo}</td><td><button onclick="editarItem('filiacion', ${i}, 'sec3')">✏️</button><button onclick="eliminarItem('filiacion', ${i})">🗑️</button></td></tr>`,
+            )
+            .join("");
+
+        document.getElementById("count-objetos").innerText =
+          parteServicio.objetos.length;
+        document.querySelector("#tabla-objetos tbody").innerHTML =
+          parteServicio.objetos
+            .map(
+              (o, i) =>
+                `<tr><td>${o.id}</td><td>${o.marca}</td><td>${o.modelo}</td><td>${o.filiadoRel}</td><td><button onclick="editarItem('objetos', ${i}, 'sec4')">✏️</button><button onclick="eliminarItem('objetos', ${i})">🗑️</button></td></tr>`,
+            )
+            .join("");
+      }
+
+      function enviarDatos() {
+        const sectionId = event.target.closest(".accordion-content").id;
+        const editIndex = parseInt(
+          document.getElementById("edit-index-" + sectionId).value,
+        );
+        let nuevoDato = null;
+        let arrayKey = "";
+
+        if (sectionId === "sec1") {
+          if (!validarCampos(["nombre", "cp", "equipo"])) return;
+          arrayKey = "funcionarios";
+          nuevoDato = {
+            nombre: document.getElementById("nombre").value,
+            cp: document.getElementById("cp").value,
+            equipo: document.getElementById("equipo").value,
+            flagPracticas: document.getElementById("flagPracticas").checked,
+            flagResponsable: document.getElementById("flagResponsable").checked,
+            telefono: document.getElementById("telefono").value,
+          };
+        } else if (sectionId === "sec2") {
+          if (
+            !validarCampos([
+              "origen-input",
+              "motivo-input",
+              "horaInicio-input",
+              "horaFin-input",
+              "lugar-input-servicio",
+            ])
+          )
+            return;
+          arrayKey = "servicios";
+          nuevoDato = {
+            origen: document.getElementById("origen-input").value,
+            motivo: document.getElementById("motivo-input").value,
+            horaInicio: document.getElementById("horaInicio-input").value,
+            horaFin: document.getElementById("horaFin-input").value,
+            lugar: document.getElementById("lugar-input-servicio").value,
+            resultado: document.getElementById("resultado-input").value,
+          };
+        } else if (sectionId === "sec3") {
+          if (
+            !validarCampos([
+              "fili-doc",
+              "fili-nombre",
+              "fili-apellidos",
+              "fili-nac",
+              "codigo",
+            ])
+          )
+            return;
+          arrayKey = "filiacion";
+          const antArray = [];
+          document.querySelectorAll(".check-ant:checked").forEach((cb) =>
+            antArray.push({
+              tipo: cb.getAttribute("data-tipo"),
+              fechaUltimo: "",
+            }),
+          );
+          const detArray = [];
+          if (document.getElementById("activarDetenido").checked)
+            detArray.push({
+              atestado: document.getElementById("det-atestado").value,
+              motivo: document.getElementById("det-motivo").value,
+            });
+          const sanArray = [];
+          if (document.getElementById("activarSancionado").checked)
+            sanArray.push({
+              acta: document.getElementById("san-atestado").value,
+              motivo: document.getElementById("san-motivo").value,
+            });
+          nuevoDato = {
+            documento: document.getElementById("fili-doc").value,
+            nombre: document.getElementById("fili-nombre").value,
+            apellidos: document.getElementById("fili-apellidos").value,
+            fechaNac: document.getElementById("fili-nac").value,
+            codigo: document.getElementById("codigo").value,
+            lugarFiliacion: document.getElementById("lugar-input-fili").value,
+            fechaFiliacion: "",
+            antecedentes: antArray,
+            detenido: detArray,
+            sancionado: sanArray,
+          };
+        } else if (sectionId === "sec4") {
+          if (
+            !validarCampos(["obj-id", "obj-marca", "obj-modelo", "codigo-obj"])
+          )
+            return;
+          arrayKey = "objetos";
+          nuevoDato = {
+            id: document.getElementById("obj-id").value,
+            marca: document.getElementById("obj-marca").value,
+            modelo: document.getElementById("obj-modelo").value,
+            filiadoRel: document.getElementById("obj-filiado").value,
+            cod: document.getElementById("codigo-obj").value,
+          };
+        }
+
+        if (editIndex > -1) parteServicio[arrayKey][editIndex] = nuevoDato;
+        else parteServicio[arrayKey].push(nuevoDato);
+
+        limpiarForm(sectionId);
+        renderizarTablas();
+        sincronizarFichero();
+        document.getElementById("msg-" + sectionId).style.display = "block";
+        setTimeout(
+          () =>
+            (document.getElementById("msg-" + sectionId).style.display =
+              "none"),
+          3000,
+        );
+      }
+
+      function editarItem(arrayKey, index, sectionId) {
+        const item = parteServicio[arrayKey][index];
+        document.getElementById("edit-index-" + sectionId).value = index;
+
+        if (sectionId === "sec1") {
+          document.getElementById("nombre").value = item.nombre;
+          document.getElementById("cp").value = item.cp;
+          document.getElementById("equipo").value = item.equipo;
+          document.getElementById("flagPracticas").checked = item.flagPracticas;
+          document.getElementById("flagResponsable").checked =
+            !!item.flagResponsable;
+          document.getElementById("telefono").value = item.telefono || "";
+          document.getElementById("telefono").disabled = !item.flagResponsable;
+        } else if (sectionId === "sec2") {
+          document.getElementById("origen-input").value = item.origen;
+          document.getElementById("motivo-input").value = item.motivo;
+          document.getElementById("horaInicio-input").value = item.horaInicio;
+          document.getElementById("horaFin-input").value = item.horaFin;
+          document.getElementById("lugar-input-servicio").value = item.lugar;
+          document.getElementById("resultado-input").value = item.resultado;
+        } else if (sectionId === "sec3") {
+          document.getElementById("fili-doc").value = item.documento;
+          document.getElementById("fili-nombre").value = item.nombre;
+          document.getElementById("fili-apellidos").value = item.apellidos;
+          document.getElementById("fili-nac").value = item.fechaNac;
+          document.getElementById("codigo").value = item.codigo;
+          document.getElementById("lugar-input-fili").value =
+            item.lugarFiliacion;
+
+          document.getElementById("activarAntecedentes").checked =
+            item.antecedentes.length > 0;
+          document.querySelectorAll(".check-ant").forEach((cb) => {
+            cb.checked = item.antecedentes.some(
+              (ant) => ant.tipo === cb.getAttribute("data-tipo"),
+            );
+          });
+
+          const isDet = item.detenido.length > 0;
+          document.getElementById("activarDetenido").checked = isDet;
+          document.getElementById("det-atestado").value = isDet
+            ? item.detenido[0].atestado
+            : "";
+          document.getElementById("det-motivo").value = isDet
+            ? item.detenido[0].motivo
+            : "";
+
+          const isSan = item.sancionado.length > 0;
+          document.getElementById("activarSancionado").checked = isSan;
+          document.getElementById("san-atestado").value = isSan
+            ? item.sancionado[0].acta
+            : "";
+          document.getElementById("san-motivo").value = isSan
+            ? item.sancionado[0].motivo
+            : "";
+
+          toggleInputs("Detenido");
+          toggleInputs("Antecedentes");
+          toggleInputs("Sancionado");
+        } else if (sectionId === "sec4") {
+          document.getElementById("obj-id").value = item.id;
+          document.getElementById("obj-marca").value = item.marca;
+          document.getElementById("obj-modelo").value = item.modelo;
+          document.getElementById("obj-filiado").value = item.filiadoRel;
+          document.getElementById("codigo-obj").value = item.cod;
+        }
+        document
+          .getElementById(sectionId)
+          .querySelector(".form-box")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
+      function validarYEjecutar() {
+        if (!validarCampos(["turno", "indicativo", "vehiculo"])) return;
+        parteServicio.fecha = getTodayFormatted();
+        parteServicio.turno = document.getElementById("turno").value;
+        parteServicio.indicativo = document.getElementById("indicativo").value;
+        parteServicio.vehiculo = document.getElementById("vehiculo").value;
+        sincronizarFichero();
+      }
+
+      function toggleSection(id) {
+        document.getElementById(id).classList.toggle("active");
+      }
+
+      function toggleInputs(name) {
+        const cb = document.getElementById("activar" + name);
+        const panel = document.getElementById("panel" + name);
+        if (panel) panel.style.display = cb.checked ? "flex" : "none";
+      }
+
+      function validarCampos(ids) {
+        let v = true;
+        ids.forEach((id) => {
+          const el = document.getElementById(id);
+          if (!el || !el.value) {
+            if (el) el.classList.add("input-error");
+            v = false;
+          }
+        });
+        return v;
+      }
+
+      function removerError(id) {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove("input-error");
+      }
+
+      function limpiarForm(id) {
+        document
+          .getElementById(id)
+          .querySelectorAll("input, select")
+          .forEach((el) => {
+            el.value = "";
+            el.checked = false;
+          });
+        document.getElementById("edit-index-" + id).value = "-1";
+        if (id === "sec1") {
+          document.getElementById("telefono").disabled = true;
+        }
+        if (id === "sec3") {
+          toggleInputs("Sancionado");
+          toggleInputs("Detenido");
+          toggleInputs("Antecedentes");
+        }
+      }
+
+      function eliminarItem(arr, idx) {
+        parteServicio[arr].splice(idx, 1);
+        renderizarTablas();
+        sincronizarFichero();
+      }
+
+      window.onload = async () => {
+        await cargarListas();
+        verificarParametrosYCargar();
+        renderizarTablas();
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,5 @@
+Arrancarlo:
+
+npx nodemon server.js
+
+Inicio: http://localhost:3000/inicio.html

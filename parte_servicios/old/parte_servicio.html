@@ -1,0 +1,1355 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulario B&N - Tablas e Información</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background-color: #ffffff;
+        color: #000000;
+        padding: 20px;
+        margin: 0;
+      }
+
+      .titulo-pagina {
+        text-align: center;
+        color: #000000;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+      }
+
+      .top-bar {
+        width: 80%;
+        margin: 0 auto 30px auto;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .top-bar select {
+        flex: 1;
+        min-width: 120px;
+      }
+
+      .search-container {
+        flex: 1;
+        min-width: 120px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .container {
+        width: 80%;
+        margin: auto;
+        background: transparent;
+        display: none;
+      }
+
+      .accordion-item {
+        margin-bottom: 25px;
+        border: 1px solid #000000;
+        box-shadow: 5px 5px 0px #000000;
+        background: #ffffff;
+        overflow: hidden;
+      }
+
+      .accordion-header {
+        background-color: #000000;
+        color: #ffffff;
+        padding: 15px;
+        cursor: pointer;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        text-transform: uppercase;
+        position: relative;
+        z-index: 2;
+      }
+
+      .header-title {
+        flex-grow: 1;
+      }
+
+      .record-badge {
+        background-color: #ffffff;
+        color: #000000;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        margin-left: 10px;
+        min-width: 20px;
+        text-align: center;
+      }
+
+      .accordion-icon {
+        margin-left: 15px;
+        font-size: 0.8rem;
+      }
+
+      .accordion-content {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 0 20px;
+        border-top: 0px solid #000000;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition:
+          max-height 0.5s ease,
+          opacity 0.5s ease,
+          padding 0.5s ease;
+      }
+
+      .accordion-content.active {
+        max-height: 2500px;
+        opacity: 1;
+        padding: 20px;
+        border-top: 1px solid #000000;
+      }
+
+      .form-box {
+        background-color: #f9f9f9;
+        border: 1px dashed #000000;
+        padding: 20px;
+        margin-top: 10px;
+      }
+
+      .form-box-title {
+        font-size: 0.8rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+        display: block;
+        color: #666;
+      }
+
+      .input-row {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+        align-items: flex-start;
+        margin-bottom: 15px;
+      }
+
+      .w-15 {
+        width: 15%;
+      }
+      .w-20 {
+        width: 20%;
+      }
+      .w-30 {
+        width: 30%;
+      }
+      .w-40 {
+        width: 40%;
+      }
+      .w-50 {
+        width: 50%;
+      }
+      .w-60 {
+        width: 60%;
+      }
+      .w-80 {
+        width: 80%;
+      }
+
+      .info-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+      }
+
+      .info-table thead {
+        display: none;
+      }
+
+      .info-table th,
+      .info-table td {
+        border: 1px solid #000000;
+        padding: 10px;
+        text-align: left;
+      }
+
+      .info-table th {
+        background-color: #000000;
+        color: #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .info-table tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      .th-acciones {
+        border: none !important;
+        background: none !important;
+        width: 80px;
+      }
+
+      .acciones-cell {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        border: none !important;
+        background-color: white !important;
+        box-shadow: none !important;
+      }
+
+      .btn-accion {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        font-size: 1.1rem;
+        transition:
+          transform 0.2s,
+          background 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .btn-accion:hover {
+        background-color: #000;
+        color: #fff;
+        transform: scale(1.2);
+        border-radius: 4px;
+      }
+
+      .btn-accion.btn-borrar:hover {
+        background-color: #800020;
+      }
+
+      .form-group-hidden {
+        display: none;
+        padding: 15px;
+        background-color: #eeeeee;
+        border: 1px solid #000000;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        box-sizing: border-box;
+        margin-top: 10px;
+      }
+
+      input,
+      select {
+        padding: 12px;
+        border: 1px solid #000000;
+        border-radius: 0px;
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 1rem;
+        background-color: #fff;
+      }
+
+      .input-error {
+        border: 2px solid #ff0000 !important;
+        background-color: #fff5f5 !important;
+      }
+
+      .error-text {
+        color: #ff0000;
+        font-size: 0.8rem;
+        font-weight: bold;
+        margin-top: 4px;
+      }
+
+      .action-footer {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .success-msg {
+        color: #2e7d32;
+        font-weight: bold;
+        font-size: 0.9rem;
+        display: none;
+        animation: fadeIn 0.3s;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .checkbox-row {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        width: auto;
+      }
+
+      .checkbox-row input {
+        width: auto;
+        cursor: pointer;
+      }
+
+      .btn-enviar {
+        width: fit-content;
+        min-width: 150px;
+        padding: 12px 25px;
+        background-color: #800020;
+        color: #ffffff;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        transition: background 0.3s;
+      }
+
+      .btn-enviar:hover {
+        background-color: #600018;
+      }
+
+      .btn-limpiar {
+        background-color: #666;
+        color: #fff;
+        border: none;
+        padding: 12px 20px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        transition: background 0.3s;
+      }
+
+      .btn-limpiar:hover {
+        background-color: #444;
+      }
+
+      .btn-buscar {
+        padding: 12px 15px;
+        background-color: #000;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      @media (max-width: 800px) {
+        .top-bar,
+        .container {
+          width: 95%;
+        }
+        .btn-enviar,
+        .btn-limpiar {
+          width: 100%;
+        }
+        .input-row {
+          flex-direction: column;
+        }
+        .w-15,
+        .w-20,
+        .w-50,
+        .w-30 {
+          width: 100%;
+        }
+        .action-footer {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header-container"></div>
+
+    <script>
+      // Función para cargar la cabecera dinámicamente
+      fetch("header.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("header-container").innerHTML = data;
+        });
+
+      // Funciones de control del menú (deben estar presentes para que funcione)
+      function abrirMenu() {
+        document.getElementById("sidebar").classList.add("active");
+        document.getElementById("overlay").classList.add("active");
+      }
+      function cerrarMenu() {
+        document.getElementById("sidebar").classList.remove("active");
+        document.getElementById("overlay").classList.remove("active");
+      }
+    </script>
+    <h1 class="titulo-pagina">Parte de servicio</h1>
+
+    <div class="top-bar">
+      <div class="search-container">
+        <select id="turno" onchange="removerError('turno')">
+          <option value="">Turno</option>
+          <option>Mañana</option>
+          <option>Tarde</option>
+          <option>Noche</option>
+        </select>
+        <div id="errorBusqueda-turno"></div>
+      </div>
+
+      <div class="search-container">
+        <select id="indicativo" onchange="removerError('indicativo')">
+          <option value="">Indicativo</option>
+          <option>LATINA-10</option>
+          <option>LATINA-20</option>
+          <option>K-5</option>
+        </select>
+        <div id="errorBusqueda-indicativo"></div>
+      </div>
+
+      <div class="search-container">
+        <input
+          type="text"
+          id="vehiculo"
+          placeholder="Vehículo"
+          oninput="removerError('vehiculo')"
+        />
+        <div id="errorBusqueda-vehiculo"></div>
+      </div>
+
+      <button class="btn-enviar" onclick="validarYEjecutar()">
+        Dar de alta
+      </button>
+    </div>
+
+    <div class="container" id="main-container">
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleSection('sec1')">
+          <span class="header-title">Funcionarios</span>
+          <span class="record-badge" id="count-funcionarios">0</span>
+          <span class="accordion-icon">▼</span>
+        </div>
+        <div id="sec1" class="accordion-content">
+          <table class="info-table" id="tabla-funcionarios">
+            <thead>
+              <tr>
+                <th>Nombre y apellidos</th>
+                <th>Carné</th>
+                <th>Equipo</th>
+                <th class="th-acciones"></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div class="form-box">
+            <span class="form-box-title">Nuevo funcionario</span>
+            <input type="hidden" id="edit-index-sec1" value="-1" />
+            <div class="input-row">
+              <div class="search-container w-20">
+                <div style="display: flex; gap: 5px">
+                  <input
+                    id="cp"
+                    type="text"
+                    placeholder="Carné"
+                    oninput="removerError('cp')"
+                  />
+                  <button class="btn-buscar" onclick="buscarFuncionario()">
+                    Buscar
+                  </button>
+                </div>
+                <div id="errorBusqueda-cp"></div>
+              </div>
+              <div class="search-container w-40">
+                <input
+                  id="nombre"
+                  type="text"
+                  placeholder="Nombre y apellidos"
+                  oninput="removerError('nombre')"
+                />
+                <div id="errorBusqueda-nombre"></div>
+              </div>
+              <div class="search-container w-20">
+                <input
+                  id="equipo"
+                  type="text"
+                  placeholder="Equipo"
+                  oninput="removerError('equipo')"
+                />
+                <div id="errorBusqueda-equipo"></div>
+              </div>
+              <label class="checkbox-row" style="margin-top: 10px"
+                ><input id="flagPracticas" type="checkbox" /> PP</label
+              >
+            </div>
+            <div class="action-footer">
+              <button class="btn-enviar" id="btn-sec1" onclick="enviarDatos()">
+                Añadir funcionario
+              </button>
+              <button class="btn-limpiar" onclick="limpiarForm('sec1')">
+                Limpiar
+              </button>
+              <div id="msg-sec1" class="success-msg">✓ Registro guardado</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleSection('sec2')">
+          <span class="header-title">Servicios</span>
+          <span class="record-badge" id="count-servicios">0</span>
+          <span class="accordion-icon">▼</span>
+        </div>
+        <div id="sec2" class="accordion-content">
+          <table class="info-table" id="tabla-servicios">
+            <thead>
+              <tr>
+                <th>Origen</th>
+                <th>Motivo</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Lugar</th>
+                <th>Resultado</th>
+                <th class="th-acciones"></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div class="form-box">
+            <span class="form-box-title">Nuevo servicio</span>
+            <input type="hidden" id="edit-index-sec2" value="-1" />
+            <div class="input-row">
+              <div class="search-container w-30">
+                <input
+                  list="origen"
+                  id="origen-input"
+                  placeholder="Origen"
+                  oninput="removerError('origen-input')"
+                />
+                <datalist id="origen">
+                  <option value="H-50"></option>
+                  <option value="BASE"></option>
+                  <option value="INICIATIVA"></option>
+                </datalist>
+                <div id="errorBusqueda-origen-input"></div>
+              </div>
+              <div class="search-container w-40">
+                <input
+                  list="motivo"
+                  id="motivo-input"
+                  placeholder="Motivo del servicio"
+                  oninput="removerError('motivo-input')"
+                />
+                <datalist id="motivo">
+                  <option value="RIESGO ALTO"></option>
+                  <option value="TRASLADO RCD"></option>
+                </datalist>
+                <div id="errorBusqueda-motivo-input"></div>
+              </div>
+              <div class="search-container w-15">
+                <input
+                  type="time"
+                  id="horaInicio-input"
+                  oninput="removerError('horaInicio-input')"
+                />
+                <div id="errorBusqueda-horaInicio-input"></div>
+              </div>
+              <div class="search-container w-15">
+                <input
+                  type="time"
+                  id="horaFin-input"
+                  oninput="removerError('horaFin-input')"
+                />
+                <div id="errorBusqueda-horaFin-input"></div>
+              </div>
+            </div>
+            <div class="input-row">
+              <div class="search-container w-50">
+                <input
+                  type="text"
+                  id="lugar-input-servicio"
+                  placeholder="Lugar"
+                  oninput="removerError('lugar-input-servicio')"
+                />
+                <div id="errorBusqueda-lugar-input-servicio"></div>
+              </div>
+              <input
+                type="text"
+                id="resultado-input"
+                class="w-50"
+                placeholder="Resultado (Opcional)"
+              />
+            </div>
+            <div class="action-footer">
+              <button class="btn-enviar" id="btn-sec2" onclick="enviarDatos()">
+                Añadir servicio
+              </button>
+              <button class="btn-limpiar" onclick="limpiarForm('sec2')">
+                Limpiar
+              </button>
+              <div id="msg-sec2" class="success-msg">✓ Registro guardado</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleSection('sec3')">
+          <span class="header-title">Identificados</span>
+          <span class="record-badge" id="count-filiacion">0</span>
+          <span class="accordion-icon">▼</span>
+        </div>
+        <div id="sec3" class="accordion-content">
+          <table class="info-table" id="tabla-filiacion">
+            <thead>
+              <tr>
+                <th>Apellidos y nombre</th>
+                <th>Documento</th>
+                <th>Fecha nac.</th>
+                <th>Código</th>
+                <th class="th-acciones"></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div class="form-box">
+            <span class="form-box-title">Nuevo identificado</span>
+            <input type="hidden" id="edit-index-sec3" value="-1" />
+            <div class="input-row">
+              <div class="search-container w-20">
+                <div style="display: flex; gap: 5px">
+                  <input
+                    type="text"
+                    id="fili-doc"
+                    placeholder="Documento"
+                    oninput="removerError('fili-doc')"
+                  />
+                  <button class="btn-buscar" onclick="buscarIdentificado()">
+                    Buscar
+                  </button>
+                </div>
+                <div id="errorBusqueda-fili-doc"></div>
+              </div>
+              <div class="search-container w-40">
+                <input
+                  type="text"
+                  id="fili-nombre"
+                  placeholder="Nombre"
+                  oninput="removerError('fili-nombre')"
+                />
+                <div id="errorBusqueda-fili-nombre"></div>
+              </div>
+              <div class="search-container w-40">
+                <input
+                  type="text"
+                  id="fili-apellidos"
+                  placeholder="Apellidos"
+                  oninput="removerError('fili-apellidos')"
+                />
+                <div id="errorBusqueda-fili-apellidos"></div>
+              </div>
+            </div>
+            <div class="input-row">
+              <div class="search-container w-20">
+                <input
+                  type="date"
+                  id="fili-nac"
+                  oninput="removerError('fili-nac')"
+                />
+                <div id="errorBusqueda-fili-nac"></div>
+              </div>
+              <div class="search-container w-80">
+                <select id="lenguaje" onchange="removerError('lenguaje')">
+                  <option value="">Código (selecciona...)</option>
+                  <option value="Sin antecedentes">Sin antecedentes</option>
+                  <option value="Nada pendiente">Nada pendiente</option>
+                </select>
+                <div id="errorBusqueda-lenguaje"></div>
+              </div>
+            </div>
+            <div class="input-row">
+              <input
+                list="lugar"
+                id="lugar-input-fili"
+                placeholder="Lugar de filiación"
+              />
+              <datalist id="lugar">
+                <option value="Aluche"></option>
+                <option value="Campamento"></option>
+              </datalist>
+            </div>
+            <label class="checkbox-row"
+              ><input
+                type="checkbox"
+                id="activarAntecedentes"
+                onchange="toggleInputs('Antecedentes')"
+              />
+              Añadir antecedentes</label
+            >
+            <div id="panelAntecedentes" class="form-group-hidden">
+              <label class="checkbox-row"
+                ><input type="checkbox" class="check-ant" /> Robos con
+                fuerza</label
+              >
+              <label class="checkbox-row"
+                ><input type="checkbox" class="check-ant" /> Robos con
+                violencia</label
+              >
+              <label class="checkbox-row"
+                ><input type="checkbox" class="check-ant" /> Hurto</label
+              >
+            </div>
+            <label class="checkbox-row" style="margin-top: 10px"
+              ><input
+                type="checkbox"
+                id="activarDetenido"
+                onchange="toggleInputs('Detenido')"
+              />
+              Detenido</label
+            >
+            <div id="panelDetenido" class="form-group-hidden">
+              <div class="input-row">
+                <input
+                  type="text"
+                  id="det-atestado"
+                  class="w-20"
+                  placeholder="Atestado"
+                />
+                <input
+                  type="text"
+                  id="det-motivo"
+                  class="w-60"
+                  placeholder="Motivo"
+                />
+              </div>
+            </div>
+            <label class="checkbox-row" style="margin-top: 10px"
+              ><input
+                type="checkbox"
+                id="activarSancionado"
+                onchange="toggleInputs('Sancionado')"
+              />
+              Sancionado</label
+            >
+            <div id="panelSancionado" class="form-group-hidden">
+              <div class="input-row">
+                <input
+                  type="text"
+                  id="san-acta"
+                  class="w-20"
+                  placeholder="Número de acta"
+                />
+                <input
+                  type="text"
+                  id="san-motivo"
+                  class="w-60"
+                  placeholder="Motivo"
+                />
+              </div>
+            </div>
+            <div class="action-footer">
+              <button class="btn-enviar" id="btn-sec3" onclick="enviarDatos()">
+                Añadir identificado
+              </button>
+              <button class="btn-limpiar" onclick="limpiarForm('sec3')">
+                Limpiar
+              </button>
+              <div id="msg-sec3" class="success-msg">✓ Registro guardado</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleSection('sec4')">
+          <span class="header-title">Vehículos y objetos</span>
+          <span class="record-badge" id="count-objetos">0</span>
+          <span class="accordion-icon">▼</span>
+        </div>
+        <div id="sec4" class="accordion-content">
+          <table class="info-table" id="tabla-objetos">
+            <thead>
+              <tr>
+                <th>Placa / Serie</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Identificado</th>
+                <th>Código</th>
+                <th class="th-acciones"></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div class="form-box">
+            <span class="form-box-title">Nuevo objeto/vehículo</span>
+            <input type="hidden" id="edit-index-sec4" value="-1" />
+            <div class="input-row">
+              <div class="search-container w-20">
+                <input
+                  type="text"
+                  id="obj-id"
+                  placeholder="Placa"
+                  oninput="removerError('obj-id')"
+                />
+                <div id="errorBusqueda-obj-id"></div>
+              </div>
+              <div class="search-container w-20">
+                <input
+                  type="text"
+                  id="obj-marca"
+                  placeholder="Marca"
+                  oninput="removerError('obj-marca')"
+                />
+                <div id="errorBusqueda-obj-marca"></div>
+              </div>
+              <div class="search-container w-20">
+                <input
+                  type="text"
+                  id="obj-modelo"
+                  placeholder="Modelo"
+                  oninput="removerError('obj-modelo')"
+                />
+                <div id="errorBusqueda-obj-modelo"></div>
+              </div>
+              <input
+                type="text"
+                id="obj-filiado"
+                class="w-20"
+                placeholder="Identificado"
+              />
+              <div class="search-container w-20">
+                <select id="codigo-obj" onchange="removerError('codigo-obj')">
+                  <option value="">Código (selecciona...)</option>
+                  <option value="Sin señalamientos">Sin señalamientos</option>
+                </select>
+                <div id="errorBusqueda-codigo-obj"></div>
+              </div>
+            </div>
+            <div class="action-footer">
+              <button class="btn-enviar" id="btn-sec4" onclick="enviarDatos()">
+                Añadir objeto
+              </button>
+              <button class="btn-limpiar" onclick="limpiarForm('sec4')">
+                Limpiar
+              </button>
+              <div id="msg-sec4" class="success-msg">✓ Registro guardado</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let parteServicio = {
+        fecha: "",
+        turno: "",
+        horario: "",
+        indicativo: "",
+        vehiculo: "",
+        funcionarios: [],
+        servicios: [],
+        filiacion: [],
+        objetos: [],
+      };
+
+      // --- LÓGICA DE CARGA POR PARÁMETRO URL ---
+      async function verificarParametrosYCargar() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const fichero = urlParams.get("fichero"); // Ej: 2024-03-20_MAÑANA_Z-10
+
+        if (fichero) {
+          const partes = fichero.split("_");
+          if (partes.length >= 3) {
+            const fechaPartes = partes[0].split("-");
+            const yyyy = fechaPartes[0];
+            const mm = fechaPartes[1];
+            const dd = fechaPartes[2];
+            const turno = partes[1];
+            const indicativo = partes[2];
+
+            try {
+              const response = await fetch(
+                `/obtener-parte?yyyy=${yyyy}&mm=${mm}&dd=${dd}&turno=${turno}&indicativo=${indicativo}`,
+              );
+              if (response.ok) {
+                parteServicio = await response.json();
+
+                // Rellenar cabecera
+                document.getElementById("turno").value = parteServicio.turno;
+                document.getElementById("indicativo").value =
+                  parteServicio.indicativo;
+                document.getElementById("vehiculo").value =
+                  parteServicio.vehiculo;
+
+                // Mostrar contenedor
+                document.getElementById("main-container").style.display =
+                  "block";
+                renderizarTablas();
+              }
+            } catch (error) {
+              console.error("Error al cargar el fichero:", error);
+            }
+          }
+        }
+      }
+
+      // Función para sincronizar con el backend Node.js
+      async function sincronizarFichero() {
+        try {
+          const response = await fetch("/guardar-parte", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(parteServicio),
+          });
+          if (!response.ok)
+            throw new Error("Error en la respuesta del servidor");
+          const result = await response.json();
+          console.log("Sincronización exitosa:", result.mensaje);
+        } catch (error) {
+          console.error("Error al sincronizar el fichero:", error);
+        }
+      }
+
+      function getTodayFormatted() {
+        const today = new Date();
+        const dd = String(today.getDate()).padStart(2, "0");
+        const mm = String(today.getMonth() + 1).padStart(2, "0");
+        const yyyy = today.getFullYear();
+        return `${dd}/${mm}/${yyyy}`;
+      }
+
+      function mostrarMensajeExito(id) {
+        const msg = document.getElementById("msg-" + id);
+        if (msg) {
+          msg.style.display = "block";
+          setTimeout(() => {
+            msg.style.display = "none";
+          }, 5000);
+        }
+      }
+
+      function renderizarTablas() {
+        const tbodyFunc = document.querySelector("#tabla-funcionarios tbody");
+        const theadFunc = document.querySelector("#tabla-funcionarios thead");
+        document.getElementById("count-funcionarios").innerText =
+          parteServicio.funcionarios.length;
+        theadFunc.style.display =
+          parteServicio.funcionarios.length > 0 ? "table-header-group" : "none";
+        tbodyFunc.innerHTML = parteServicio.funcionarios
+          .map(
+            (f, i) => `
+          <tr>
+            <td>${f.nombre} ${f.flagPracticas ? '<span style="color: #800020; font-weight: bold;">(PP)</span>' : ""}</td>
+            <td>${f.cp}</td><td>${f.equipo}</td>
+            <td class="acciones-cell">
+              <button class="btn-accion" onclick="editarItem('funcionarios', ${i}, 'sec1')">✏️</button>
+              <button class="btn-accion btn-borrar" onclick="eliminarItem('funcionarios', ${i})">🗑️</button>
+            </td>
+          </tr>`,
+          )
+          .join("");
+
+        const tbodyServ = document.querySelector("#tabla-servicios tbody");
+        const theadServ = document.querySelector("#tabla-servicios thead");
+        document.getElementById("count-servicios").innerText =
+          parteServicio.servicios.length;
+        theadServ.style.display =
+          parteServicio.servicios.length > 0 ? "table-header-group" : "none";
+        tbodyServ.innerHTML = parteServicio.servicios
+          .map(
+            (s, i) => `
+          <tr>
+            <td>${s.origen}</td><td>${s.motivo}</td><td>${s.inicio}</td><td>${s.fin}</td><td>${s.lugar}</td><td>${s.resultado}</td>
+            <td class="acciones-cell">
+              <button class="btn-accion" onclick="editarItem('servicios', ${i}, 'sec2')">✏️</button>
+              <button class="btn-accion btn-borrar" onclick="eliminarItem('servicios', ${i})">🗑️</button>
+            </td>
+          </tr>`,
+          )
+          .join("");
+
+        const tbodyFili = document.querySelector("#tabla-filiacion tbody");
+        const theadFili = document.querySelector("#tabla-filiacion thead");
+        document.getElementById("count-filiacion").innerText =
+          parteServicio.filiacion.length;
+        theadFili.style.display =
+          parteServicio.filiacion.length > 0 ? "table-header-group" : "none";
+        tbodyFili.innerHTML = parteServicio.filiacion
+          .map(
+            (f, i) => `
+          <tr>
+            <td>${f.apellidos}, ${f.nombre}</td><td>${f.doc}</td><td>${f.nac}</td><td>${f.codigo}</td>
+            <td class="acciones-cell">
+              <button class="btn-accion" onclick="editarItem('filiacion', ${i}, 'sec3')">✏️</button>
+              <button class="btn-accion btn-borrar" onclick="eliminarItem('filiacion', ${i})">🗑️</button>
+            </td>
+          </tr>`,
+          )
+          .join("");
+
+        const tbodyObj = document.querySelector("#tabla-objetos tbody");
+        const theadObj = document.querySelector("#tabla-objetos thead");
+        document.getElementById("count-objetos").innerText =
+          parteServicio.objetos.length;
+        theadObj.style.display =
+          parteServicio.objetos.length > 0 ? "table-header-group" : "none";
+        tbodyObj.innerHTML = parteServicio.objetos
+          .map(
+            (o, i) => `
+          <tr>
+            <td>${o.id}</td><td>${o.marca}</td><td>${o.modelo}</td><td>${o.filiado}</td><td>${o.codigo}</td>
+            <td class="acciones-cell">
+              <button class="btn-accion" onclick="editarItem('objetos', ${i}, 'sec4')">✏️</button>
+              <button class="btn-accion btn-borrar" onclick="eliminarItem('objetos', ${i})">🗑️</button>
+            </td>
+          </tr>`,
+          )
+          .join("");
+      }
+
+      function eliminarItem(arrayName, index) {
+        parteServicio[arrayName].splice(index, 1);
+        renderizarTablas();
+        sincronizarFichero(); // Actualizar fichero al eliminar
+      }
+
+      function limpiarForm(secId) {
+        const container = document.getElementById(secId);
+        container
+          .querySelectorAll('input:not([type="hidden"]), select')
+          .forEach((el) => {
+            el.value = "";
+            el.checked = false;
+            el.classList.remove("input-error");
+          });
+        if (secId === "sec3") {
+          document.getElementById("panelAntecedentes").style.display = "none";
+          document.getElementById("panelDetenido").style.display = "none";
+          document.getElementById("panelSancionado").style.display = "none";
+        }
+        container
+          .querySelectorAll('[id^="errorBusqueda-"]')
+          .forEach((el) => (el.innerHTML = ""));
+        document.getElementById("edit-index-" + secId).value = "-1";
+        const btn = document.getElementById("btn-" + secId);
+        const textMap = {
+          sec1: "funcionario",
+          sec2: "servicio",
+          sec3: "identificado",
+          sec4: "objeto",
+        };
+        btn.innerText = "Añadir " + textMap[secId];
+      }
+
+      function buscarFuncionario() {
+        const carnet = document.getElementById("cp").value.trim();
+        if (!carnet) return;
+        const funcionario = parteServicio.funcionarios.find(
+          (f) => f.cp === carnet,
+        );
+        if (funcionario) {
+          document.getElementById("nombre").value = funcionario.nombre;
+          document.getElementById("equipo").value = funcionario.equipo;
+          document.getElementById("flagPracticas").checked =
+            funcionario.flagPracticas;
+          removerError("nombre");
+          removerError("equipo");
+        }
+      }
+
+      function buscarIdentificado() {
+        const doc = document.getElementById("fili-doc").value.trim();
+        if (!doc) return;
+        const item = parteServicio.filiacion.find((f) => f.doc === doc);
+        if (item) {
+          document.getElementById("fili-nombre").value = item.nombre;
+          document.getElementById("fili-apellidos").value = item.apellidos;
+          document.getElementById("fili-nac").value = item.nac;
+          document.getElementById("lenguaje").value = item.codigo;
+          document.getElementById("lugar-input-fili").value = item.lugar || "";
+
+          const checkAnt = document.getElementById("activarAntecedentes");
+          checkAnt.checked = item.antecedentes && item.antecedentes.length > 0;
+          toggleInputs("Antecedentes");
+          document
+            .querySelectorAll("#panelAntecedentes .check-ant")
+            .forEach((cb) => {
+              cb.checked =
+                item.antecedentes &&
+                item.antecedentes.some(
+                  (a) => a.tipo === cb.parentElement.innerText.trim(),
+                );
+            });
+
+          const checkDet = document.getElementById("activarDetenido");
+          checkDet.checked = !!item.detenido;
+          toggleInputs("Detenido");
+          if (item.detenido) {
+            document.getElementById("det-atestado").value =
+              item.detenido.atestado;
+            document.getElementById("det-motivo").value = item.detenido.motivo;
+          }
+
+          const checkSan = document.getElementById("activarSancionado");
+          checkSan.checked = !!item.sancionado;
+          toggleInputs("Sancionado");
+          if (item.sancionado) {
+            document.getElementById("san-acta").value = item.sancionado.acta;
+            document.getElementById("san-motivo").value =
+              item.sancionado.motivo;
+          }
+          removerError("fili-nombre");
+          removerError("fili-apellidos");
+          removerError("fili-nac");
+          removerError("lenguaje");
+        }
+      }
+
+      function editarItem(arrayName, index, secId) {
+        const item = parteServicio[arrayName][index];
+        document.getElementById("edit-index-" + secId).value = index;
+        const btn = document.getElementById("btn-" + secId);
+        const textMap = {
+          sec1: "funcionario",
+          sec2: "servicio",
+          sec3: "identificado",
+          sec4: "objeto",
+        };
+        btn.innerText = "Editar " + textMap[secId];
+
+        if (arrayName === "funcionarios") {
+          document.getElementById("nombre").value = item.nombre;
+          document.getElementById("cp").value = item.cp;
+          document.getElementById("equipo").value = item.equipo;
+          document.getElementById("flagPracticas").checked = item.flagPracticas;
+        } else if (arrayName === "servicios") {
+          document.getElementById("origen-input").value = item.origen;
+          document.getElementById("motivo-input").value = item.motivo;
+          document.getElementById("horaInicio-input").value = item.inicio;
+          document.getElementById("horaFin-input").value = item.fin;
+          document.getElementById("lugar-input-servicio").value = item.lugar;
+          document.getElementById("resultado-input").value = item.resultado;
+        } else if (arrayName === "filiacion") {
+          document.getElementById("fili-doc").value = item.doc;
+          document.getElementById("fili-nombre").value = item.nombre;
+          document.getElementById("fili-apellidos").value = item.apellidos;
+          document.getElementById("fili-nac").value = item.nac;
+          document.getElementById("lenguaje").value = item.codigo;
+          document.getElementById("lugar-input-fili").value = item.lugar || "";
+
+          const checkAnt = document.getElementById("activarAntecedentes");
+          checkAnt.checked = item.antecedentes && item.antecedentes.length > 0;
+          toggleInputs("Antecedentes");
+          document
+            .querySelectorAll("#panelAntecedentes .check-ant")
+            .forEach((cb) => {
+              cb.checked =
+                item.antecedentes &&
+                item.antecedentes.some(
+                  (a) => a.tipo === cb.parentElement.innerText.trim(),
+                );
+            });
+
+          const checkDet = document.getElementById("activarDetenido");
+          checkDet.checked = !!item.detenido;
+          toggleInputs("Detenido");
+          if (item.detenido) {
+            document.getElementById("det-atestado").value =
+              item.detenido.atestado;
+            document.getElementById("det-motivo").value = item.detenido.motivo;
+          }
+
+          const checkSan = document.getElementById("activarSancionado");
+          checkSan.checked = !!item.sancionado;
+          toggleInputs("Sancionado");
+          if (item.sancionado) {
+            document.getElementById("san-acta").value = item.sancionado.acta;
+            document.getElementById("san-motivo").value =
+              item.sancionado.motivo;
+          }
+        } else if (arrayName === "objetos") {
+          document.getElementById("obj-id").value = item.id;
+          document.getElementById("obj-marca").value = item.marca;
+          document.getElementById("obj-modelo").value = item.modelo;
+          document.getElementById("obj-filiado").value = item.filiado;
+          document.getElementById("codigo-obj").value = item.codigo;
+        }
+      }
+
+      function validarCampos(ids) {
+        let valido = true;
+        ids.forEach((id) => {
+          const el = document.getElementById(id);
+          if (!el || !el.value || el.value.trim() === "") {
+            if (el) el.classList.add("input-error");
+            const errDiv = document.getElementById("errorBusqueda-" + id);
+            if (errDiv)
+              errDiv.innerHTML =
+                '<span class="error-text">Campo obligatorio</span>';
+            valido = false;
+          }
+        });
+        return valido;
+      }
+
+      function enviarDatos() {
+        const btnActivo = event.target;
+        const sectionId = btnActivo.closest(".accordion-content").id;
+        const editIndex = parseInt(
+          document.getElementById("edit-index-" + sectionId).value,
+        );
+        let nuevoDato = null;
+        let arrayKey = "";
+
+        if (sectionId === "sec1") {
+          if (!validarCampos(["nombre", "cp", "equipo"])) return;
+          arrayKey = "funcionarios";
+          nuevoDato = {
+            nombre: document.getElementById("nombre").value,
+            cp: document.getElementById("cp").value,
+            equipo: document.getElementById("equipo").value,
+            flagPracticas: document.getElementById("flagPracticas").checked,
+          };
+        } else if (sectionId === "sec2") {
+          if (
+            !validarCampos([
+              "origen-input",
+              "motivo-input",
+              "horaInicio-input",
+              "horaFin-input",
+              "lugar-input-servicio",
+            ])
+          )
+            return;
+          arrayKey = "servicios";
+          nuevoDato = {
+            origen: document.getElementById("origen-input").value,
+            motivo: document.getElementById("motivo-input").value,
+            inicio: document.getElementById("horaInicio-input").value,
+            fin: document.getElementById("horaFin-input").value,
+            lugar: document.getElementById("lugar-input-servicio").value,
+            resultado: document.getElementById("resultado-input").value,
+          };
+        } else if (sectionId === "sec3") {
+          if (
+            !validarCampos([
+              "fili-doc",
+              "fili-nombre",
+              "fili-apellidos",
+              "fili-nac",
+              "lenguaje",
+            ])
+          )
+            return;
+          arrayKey = "filiacion";
+          let antecedentes = [];
+          if (document.getElementById("activarAntecedentes").checked) {
+            document
+              .querySelectorAll("#panelAntecedentes .check-ant:checked")
+              .forEach((cb) => {
+                antecedentes.push({ tipo: cb.parentElement.innerText.trim() });
+              });
+          }
+          let detenido = document.getElementById("activarDetenido").checked
+            ? {
+                atestado: document.getElementById("det-atestado").value,
+                motivo: document.getElementById("det-motivo").value,
+              }
+            : null;
+          let sancionado = document.getElementById("activarSancionado").checked
+            ? {
+                acta: document.getElementById("san-acta").value,
+                motivo: document.getElementById("san-motivo").value,
+              }
+            : null;
+          nuevoDato = {
+            doc: document.getElementById("fili-doc").value,
+            nombre: document.getElementById("fili-nombre").value,
+            apellidos: document.getElementById("fili-apellidos").value,
+            nac: document.getElementById("fili-nac").value,
+            codigo: document.getElementById("lenguaje").value,
+            lugar: document.getElementById("lugar-input-fili").value,
+            antecedentes: antecedentes,
+            detenido: detenido,
+            sancionado: sancionado,
+          };
+        } else if (sectionId === "sec4") {
+          if (
+            !validarCampos(["obj-id", "obj-marca", "obj-modelo", "codigo-obj"])
+          )
+            return;
+          arrayKey = "objetos";
+          nuevoDato = {
+            id: document.getElementById("obj-id").value,
+            marca: document.getElementById("obj-marca").value,
+            modelo: document.getElementById("obj-modelo").value,
+            filiado: document.getElementById("obj-filiado").value,
+            codigo: document.getElementById("codigo-obj").value,
+          };
+        }
+
+        if (editIndex > -1) {
+          parteServicio[arrayKey][editIndex] = nuevoDato;
+        } else {
+          parteServicio[arrayKey].push(nuevoDato);
+        }
+
+        limpiarForm(sectionId);
+        mostrarMensajeExito(sectionId);
+        renderizarTablas();
+        sincronizarFichero(); // Sincronizar al actualizar contenido
+      }
+
+      function toggleSection(id) {
+        document.getElementById(id).classList.toggle("active");
+      }
+
+      function toggleInputs(name) {
+        const checkbox = document.getElementById("activar" + name);
+        const panel = document.getElementById("panel" + name);
+        if (panel) panel.style.display = checkbox.checked ? "flex" : "none";
+      }
+
+      function removerError(id) {
+        const input = document.getElementById(id);
+        if (input) {
+          input.classList.remove("input-error");
+          const errDiv = document.getElementById("errorBusqueda-" + id);
+          if (errDiv) errDiv.innerHTML = "";
+        }
+      }
+
+      function validarYEjecutar() {
+        if (!validarCampos(["turno", "indicativo", "vehiculo"])) return;
+
+        parteServicio.fecha = getTodayFormatted();
+        parteServicio.turno = document.getElementById("turno").value;
+        parteServicio.indicativo = document.getElementById("indicativo").value;
+        parteServicio.vehiculo = document.getElementById("vehiculo").value;
+
+        document.getElementById("main-container").style.display = "block";
+
+        // Al pulsar "Dar de alta" se crea el fichero por primera vez
+        sincronizarFichero();
+      }
+
+      window.addEventListener("beforeunload", function (e) {
+        e.preventDefault();
+        e.returnValue = "¿Está seguro que desea salir?";
+      });
+
+      window.onload = () => {
+        verificarParametrosYCargar();
+        renderizarTablas();
+      };
+    </script>
+  </body>
+</html>

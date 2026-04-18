@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Rellenar Formulario V-082</title>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f4f9;
+        display: flex;
+        justify-content: center;
+        padding: 40px;
+      }
+      .card {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 450px;
+      }
+      h2 {
+        color: #2c3e50;
+        margin-top: 0;
+        font-size: 1.2rem;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #555;
+      }
+      input[type="text"],
+      input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        box-sizing: border-box;
+      }
+      button {
+        width: 100%;
+        padding: 12px;
+        background-color: #1a73e8;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      button:hover {
+        background-color: #1557b0;
+      }
+      .info {
+        font-size: 0.85rem;
+        color: #666;
+        margin-top: 15px;
+        background: #eef6ff;
+        padding: 10px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h2>Generador de Identificación (V-082)</h2>
+
+      <label for="inputArchivo">1. Selecciona el PDF original:</label>
+      <input type="file" id="inputArchivo" accept=".pdf" />
+
+      <label for="inputNombre">2. Nombre del encartado:</label>
+      <input type="text" id="inputNombre" placeholder="Ej: JUAN PÉREZ GARCÍA" />
+
+      <button onclick="procesarV082()">Generar Documento</button>
+
+      <div class="info">
+        Nota: El sistema escribirá el nombre justo encima de la etiqueta
+        {{NOMBRE}} del formulario original.
+      </div>
+    </div>
+
+    <script>
+      const coord = [
+        {
+          campo: "nombre",
+          datos: {
+            x: 85, // Posición horizontal
+            y: 406, // Posición vertical (ajustada para la línea de Filiación)
+            size: 10,
+            color: PDFLib.rgb(0, 0, 0),
+          },
+        },
+      ];
+
+      function obtenerDatosPorCampo(nombreABuscar) {
+        // Buscamos el objeto cuyo atributo 'campo' coincida
+        const item = coord.find((c) => c.campo === nombreABuscar);
+
+        // Si lo encuentra, devuelve 'datos', si no, devuelve null (o lo que prefieras)
+        return item ? item.datos : null;
+      }
+
+      async function procesarV082() {
+        const fileInput = document.getElementById("inputArchivo");
+        const nombreText = document
+          .getElementById("inputNombre")
+          .value.toUpperCase();
+
+        if (fileInput.files.length === 0 || !nombreText) {
+          alert("Por favor, selecciona el archivo y escribe un nombre.");
+          return;
+        }
+
+        try {
+          const arrayBuffer = await fileInput.files[0].arrayBuffer();
+          const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+
+          // Accedemos a la primera página
+          const pages = pdfDoc.getPages();
+          const firstPage = pages[0];
+
+          // Coordenadas aproximadas para el campo "Nombre:" en el modelo V-082
+          // Estas coordenadas sitúan el texto justo después de "Nombre: "
+          firstPage.drawText(nombreText, obtenerDatosPorCampo("nombre"));
+
+          // Guardar y descargar
+          const pdfBytes = await pdfDoc.save();
+          descargar(pdfBytes, `V-082_${nombreText}.pdf`);
+        } catch (error) {
+          console.error(error);
+          alert(
+            "Error al procesar el PDF. Asegúrate de usar el archivo V-082 original.",
+          );
+        }
+      }
+
+      function descargar(data, filename) {
+        const blob = new Blob([data], { type: "application/pdf" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "turnos": ["Mañana", "Tarde", "Noche"],
+  "indicativos": ["SEGURIDAD", "LATINA-10", "LATINA-20", "LATINA-30", "K-5"],
+  "origenes": ["H-50", "BASE", "INICIATIVA", "EMISORA", "CIUDADANO"],
+  "motivos": [
+    "RIESGO ALTO",
+    "DROGAS",
+    "ARMAS",
+    "IDENTIFICACION",
+    "ORDEN DE BUSQUEDA",
+    "OTROS"
+  ],
+  "codigos": [
+    "Sin antecedentes",
+    "Nada pendiente",
+    "Código 1",
+    "Código 2",
+    "Código 3",
+    "Código 4",
+    "Código 5",
+    "Código 6",
+    "Código 7",
+    "Código 8",
+    "Código 9"
+  ],
+  "lugares": [
+    "Aluche",
+    "Campamento",
+    "Cuatro Vientos",
+    "Las Aguilas",
+    "Lucero",
+    "Los Cármenes",
+    "Puerta del Angel"
+  ],
+  "codigosObj": [
+    "Sin señalamientos",
+    "Señalamiento vehículo / objeto",
+    "Señalamiento placas",
+    "Señalamiento documentación"
+  ]
+}

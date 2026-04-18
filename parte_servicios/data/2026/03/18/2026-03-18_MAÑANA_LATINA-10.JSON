@@ -1,0 +1,23 @@
+{
+  "fecha": "2026-03-18",
+  "turno": "Mañana",
+  "indicativo": "LATINA-10",
+  "vehiculo": "3345",
+  "funcionarios": [
+    {
+      "nombre": "LUIS FELIPE HERNANDEZ ROSA",
+      "cp": "149893",
+      "equipo": "442",
+      "flagPracticas": true
+    },
+    {
+      "nombre": "LUCIA GARCIA",
+      "cp": "100988",
+      "equipo": "442",
+      "flagPracticas": false
+    }
+  ],
+  "servicios": [],
+  "filiacion": [],
+  "objetos": []
+}

@@ -1,0 +1,91 @@
+{
+  "fecha": "2026-03-17",
+  "turno": "Mañana",
+  "indicativo": "LATINA-20",
+  "vehiculo": "1123",
+  "funcionarios": [
+    {
+      "nombre": "LUIS FELIPE HERNANDEZ ROSA",
+      "cp": "149893",
+      "equipo": "442",
+      "flagPracticas": true
+    },
+    {
+      "nombre": "ARTURO GONZALEZ",
+      "cp": "132998",
+      "equipo": "434",
+      "flagPracticas": false
+    }
+  ],
+  "servicios": [
+    {
+      "origen": "H-50",
+      "motivo": "RIESGO ALTO",
+      "horaInicio": "12:00",
+      "horaFin": "13:00",
+      "lugar": "Calle falsa",
+      "resultado": ""
+    },
+    {
+      "origen": "INICIATIVA",
+      "motivo": "REGISTRO LOCAL",
+      "horaInicio": "13:00",
+      "horaFin": "14:00",
+      "lugar": "Plaza Aluche",
+      "resultado": "Parte: 21231"
+    },
+    {
+      "origen": "BASE",
+      "motivo": "RIESGO ALTO",
+      "horaInicio": "09:00",
+      "horaFin": "10:00",
+      "lugar": "Calle verdadera",
+      "resultado": ""
+    }
+  ],
+  "filiacion": [
+    {
+      "documento": "48348880M",
+      "nombre": "RAUL",
+      "apellidos": "HERNANDEZ",
+      "fechaNac": "1984-09-19",
+      "codigo": "Sin antecedentes",
+      "lugarFiliacion": "Aluche",
+      "fechaFiliacion": "",
+      "antecedentes": [
+        {
+          "tipo": "rcv",
+          "fechaUltimo": ""
+        }
+      ],
+      "detenido": [
+        {
+          "atestado": "112",
+          "motivo": "Hurto"
+        }
+      ],
+      "sancionado": []
+    },
+    {
+      "documento": "z12312312x",
+      "nombre": "Xi",
+      "apellidos": "YIPIN",
+      "fechaNac": "2000-06-05",
+      "codigo": "Sin antecedentes",
+      "lugarFiliacion": "Campamento",
+      "fechaFiliacion": "",
+      "antecedentes": [],
+      "detenido": [],
+      "sancionado": []
+    }
+  ],
+  "objetos": [
+    {
+      "id": "0103cbx",
+      "marca": "renault",
+      "modelo": "clio",
+      "filiadoRel": "",
+      "cod": "Sin señalamientos"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "fecha": "2026-03-19",
+  "turno": "Tarde",
+  "indicativo": "LATINA-20",
+  "vehiculo": "2074BC",
+  "funcionarios": [
+    {
+      "nombre": "LUIS HERNANDEZ",
+      "cp": "149893",
+      "equipo": "424",
+      "flagPracticas": true,
+      "flagResponsable": false,
+      "telefono": ""
+    },
+    {
+      "nombre": "MANUEL FERNANDEZ",
+      "cp": "149500",
+      "equipo": "441",
+      "flagPracticas": false,
+      "flagResponsable": true,
+      "telefono": "600451232"
+    }
+  ],
+  "servicios": [
+    {
+      "origen": "BASE",
+      "motivo": "RIESGO ALTO",
+      "horaInicio": "15:00",
+      "horaFin": "22:00",
+      "lugar": "CALLE FUENTESAUCO",
+      "resultado": ""
+    },
+    {
+      "origen": "H-50",
+      "motivo": "DISCUSION ENTRE VECINOS",
+      "horaInicio": "17:30",
+      "horaFin": "18:30",
+      "lugar": "CALLE ILLESCAS, 5",
+      "resultado": "SE RESUELVE CON PRESENCIA"
+    }
+  ],
+  "filiacion": [
+    {
+      "documento": "48348880M",
+      "nombre": "RAUL",
+      "apellidos": "HERNANDEZ",
+      "fechaNac": "1984-09-19",
+      "codigo": "Código 1",
+      "lugarFiliacion": "Aluche",
+      "fechaFiliacion": "",
+      "antecedentes": [
+        {
+          "tipo": "rcv",
+          "fechaUltimo": ""
+        }
+      ],
+      "detenido": [],
+      "sancionado": []
+    },
+    {
+      "documento": "Y5600913F",
+      "nombre": "JIN",
+      "apellidos": "XIPIN",
+      "fechaNac": "2000-09-05",
+      "codigo": "Código 1",
+      "lugarFiliacion": "Aluche",
+      "fechaFiliacion": "",
+      "antecedentes": [],
+      "detenido": [],
+      "sancionado": []
+    }
+  ],
+  "objetos": []
+}

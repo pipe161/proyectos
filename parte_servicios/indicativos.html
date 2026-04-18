@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tabla de Vehículos en Servicio</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0; /* Reseteamos el margen del body */
+        background-color: #f0f0f0; /* Fondo grisáceo para resaltar la "hoja" */
+        color: #333;
+        justify-content: center;
+      }
+
+      .main-wrapper {
+        display: flex;
+        justify-content: center;
+        padding: 60px 20px; /* Este padding superior evita que el menú tape el título */
+      }
+
+      /* Nuevo contenedor para el efecto de hoja */
+      .paper-container {
+        min-height: 297mm;
+        padding: 20mm;
+        margin: 0 auto;
+        background-color: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
+      }
+
+      .header {
+        text-align: center;
+        font-weight: bold;
+        font-size: 24px; /* Título más grande */
+        margin-bottom: 40px; /* Espacio entre el título y la primera tabla */
+      }
+
+      .info-section {
+        width: 100%;
+        margin-bottom: 40px; /* Espacio entre la primera y la segunda tabla */
+        border-collapse: collapse;
+      }
+
+      /* Ajuste para que las tablas ocupen el 100% del nuevo contenedor */
+      .header,
+      .info-section,
+      .main-table {
+        width: 100%;
+      }
+
+      .info-section td {
+        padding: 5px;
+        border: 1px solid #ccc;
+      }
+      .label {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        width: 20%;
+      }
+      .main-table th,
+      .main-table td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+      }
+      .section-title {
+        background-color: #d9d9d9;
+        font-weight: bold;
+        text-align: center;
+      }
+      .col-header {
+        background-color: #ececec;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header-container"></div>
+    <script>
+      fetch("header.html")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("header-container").innerHTML = data;
+        });
+
+      function abrirMenu() {
+        document.getElementById("sidebar").classList.add("active");
+        document.getElementById("overlay").classList.add("active");
+      }
+      function cerrarMenu() {
+        document.getElementById("sidebar").classList.remove("active");
+        document.getElementById("overlay").classList.remove("active");
+      }
+    </script>
+    <div class="main-wrapper">
+      <div class="paper-container">
+        <div class="header">
+          JEFATURA SUPERIOR DE POLICÍA DE MADRID<br />
+          COMISARIA: MADRID LATINA
+        </div>
+
+        <table class="info-section">
+          <tr>
+            <td class="label">TURNO</td>
+            <td id="info-turno">Cargando...</td>
+            <td class="label">FECHA</td>
+            <td id="info-fecha">Cargando...</td>
+          </tr>
+          <tr>
+            <td class="label">INDICATIVOS EN SERVICIO</td>
+            <td id="info-cantidad-indicativos">0</td>
+            <td class="label">COMPONENTES</td>
+            <td id="info-cantidad-funcionarios">0</td>
+          </tr>
+          <tr>
+            <td class="label">RESPONSABLE Y TELÉFONO</td>
+            <td colspan="3" id="info-responsable">Buscando responsable...</td>
+          </tr>
+        </table>
+
+        <table class="main-table">
+          <thead>
+            <tr>
+              <th colspan="3" class="section-title">VEHÍCULOS “Z”</th>
+              <th colspan="3" class="section-title">VEHÍCULOS "K"</th>
+            </tr>
+            <tr class="col-header">
+              <td>INDICATIVO</td>
+              <td>MATRÍCULA</td>
+              <td>Nº COMPONENTES</td>
+              <td>INDICATIVO</td>
+              <td>MATRÍCULA</td>
+              <td>Nº COMPONENTES</td>
+            </tr>
+          </thead>
+          <tbody id="tabla-cuerpo"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      async function cargarDatos() {
+        const params = new URLSearchParams(window.location.search);
+        const fecha = params.get("fecha");
+        const turno = params.get("turno");
+
+        if (!fecha || !turno) return;
+
+        const fechaURL = params.get("fecha"); // Recibe YYYY-MM-DD
+        const partesFecha = fechaURL.split("-");
+        document.getElementById("info-fecha").innerText =
+          `${partesFecha[2]}/${partesFecha[1]}/${partesFecha[0]}`;
+        document.getElementById("info-turno").innerText = turno.toUpperCase();
+
+        try {
+          const response = await fetch(
+            `/obtener-partes-turno?fecha=${fecha}&turno=${turno}`,
+          );
+          const partes = await response.json();
+
+          let totalFuncionarios = 0;
+          let responsableTexto = "No asignado";
+
+          // Filtrar por tipos de indicativos
+          const indicativosZ = partes.filter((p) =>
+            p.indicativo.startsWith("LATINA"),
+          );
+          const indicativosK = partes.filter((p) =>
+            p.indicativo.startsWith("K"),
+          );
+
+          // Procesar datos generales y responsable
+          partes.forEach((p) => {
+            totalFuncionarios += p.funcionarios.length;
+            const resp = p.funcionarios.find((f) => f.flagResponsable === true);
+            if (resp) {
+              console.log(p);
+              responsableTexto = `${p.indicativo} - ${resp.nombre} - TELÉFONO ${resp.telefono || "N/A"}`;
+            }
+          });
+
+          document.getElementById("info-cantidad-indicativos").innerText =
+            partes.filter((p) => p.indicativo !== "SEGURIDAD").length;
+          document.getElementById("info-cantidad-funcionarios").innerText =
+            totalFuncionarios;
+          document.getElementById("info-responsable").innerText =
+            responsableTexto;
+
+          // Construir la tabla
+          const tbody = document.getElementById("tabla-cuerpo");
+          const maxFilas = Math.max(indicativosZ.length, indicativosK.length);
+
+          let html = "";
+          for (let i = 0; i < maxFilas; i++) {
+            const z = indicativosZ[i] || {
+              indicativo: "",
+              vehiculo: "",
+              funcionarios: [],
+            };
+            const k = indicativosK[i] || {
+              indicativo: "",
+              vehiculo: "",
+              funcionarios: [],
+            };
+
+            html += `
+                        <tr>
+                            <td>${z.indicativo}</td>
+                            <td>${z.vehiculo}</td>
+                            <td>${z.indicativo ? z.funcionarios.length : ""}</td>
+                            <td>${k.indicativo}</td>
+                            <td>${k.vehiculo}</td>
+                            <td>${k.indicativo ? k.funcionarios.length : ""}</td>
+                        </tr>
+                    `;
+          }
+          tbody.innerHTML = html;
+        } catch (error) {
+          console.error("Error cargando datos:", error);
+        }
+      }
+
+      window.onload = cargarDatos;
+    </script>
+  </body>
+</html>

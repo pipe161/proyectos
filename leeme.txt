@@ -1,0 +1,90 @@
+Front
+Build:
+docker build -t mi-frontend:XXX .
+
+Run:
+docker run -d --rm -p 80:80 --name frontend-angular --network mi-red mi-frontend:XXX
+
+Back
+Build con Docker: docker build -t mi-backend:XXX .
+
+Desplegar el servicio:
+docker run -d --rm -p 8080:8080 \
+  -e CLAVE_JWT=MiClaveSecretaSuperSegura1234567890 \
+  --name backend-final mi-backend:XXX
+
+docker run -d --rm -p 8080:8080 --name backend-final --network mi-red -e CLAVE_JWT=MiClaveSecretaSuperSegura1234567890 mi-backend:v11
+
+Forzar borrado del Docker: docker rm -f backend-final
+
+Comprobar el servicio: curl -I http://localhost:8080/api/mensaje
+
+curl -X POST http://localhost:8080/api/login \
+     -H "Content-Type: application/json" \
+     -d '{"usuario":"admin", "pass":"1234"}'
+
+curl -H "Authorization: Bearer <TU_TOKEN>" http://localhost:8080/api/mensaje
+
+------
+Levantar en Kubernetes
+kubectl apply -f despliegue.yaml
+
+Comprobar los dockers desplegados
+kubectl get pods
+
+-----------
+Resumen del flujo de trabajo limpio:
+Limpiar: docker rm -f frontend-web backend-api
+
+Borrar imagen: docker rmi frontend-app:v1 backend-app:v1
+
+Construir: docker build --no-cache -t nombre:v1 .
+
+Lanzar: docker run ...
+
+
+
+docker network create mi-red
+
+
+
+
+
+Con solo Docker:
+
+
+1. Compilar back y front
+docker build -t mi-backend:XXX .
+docker build -t mi-frontend:XXX .
+
+2. Crear la red comun
+docker network create mi-red
+
+3. Lanzar las imágenes
+docker run -d --rm -p 8080:8080 --name backend-java    --network mi-red -e CLAVE_JWT=MiClaveSecretaSuperSegura1234567890 mi-backend:XXX
+docker run -d --rm -p 80:80     --name frontend-angular --network mi-red mi-frontend:XXX
+
+5. Probar las aplicaciones:
+Back:
+curl -X POST http://localhost:8080/api/login \
+     -H "Content-Type: application/json" \
+     -d '{"usuario":"admin", "pass":"1234"}'
+
+curl -H "Authorization: Bearer <TU_TOKEN>" http://localhost:8080/api/mensaje
+
+Front:
+http://localhost/
+
+4. Borrado de imágenes en Docker
+docker rm -f YYYY
+
+Kubernetes
+3. Crear el secreto de seguridad
+kubectl create secret generic mi-seguridad --from-literal=CLAVE_JWT=MiClaveSecretaSuperSegura1234567890
+
+4. Cargar las imágenes
+minikube image load mi-backend:XXX
+minikube image load mi-frontend:XXX
+
+5. Lanzar el despliegue
+kubectl apply -f despliegue.yaml

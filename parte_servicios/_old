@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulario B&N - Tablas e Información</title>
+    <style>
+      /* Se mantienen todos tus estilos originales */
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background-color: #ffffff;
+        color: #000000;
+        padding: 20px;
+        margin: 0;
+      }
+
+      .titulo-pagina {
+        text-align: center;
+        color: #000000;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+      }
+
+      .top-bar {
+        width: 80%;
+        margin: 0 auto 30px auto;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .top-bar select {
+        flex: 1;
+        min-width: 120px;
+      }
+
+      .search-container {
+        flex: 1;
+        min-width: 120px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .container {
+        width: 80%;
+        margin: auto;
+        background: transparent;
+        display: none;
+      }
+
+      .accordion-item {
+        margin-bottom: 25px;
+        border: 1px solid #000000;
+        box-shadow: 5px 5px 0px #000000;
+        background: #ffffff;
+        overflow: hidden;
+      }
+
+      .accordion-header {
+        background-color: #000000;
+        color: #ffffff;
+        padding: 15px;
+        cursor: pointer;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        text-transform: uppercase;
+        position: relative;
+        z-index: 2;
+      }
+
+      .accordion-content {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 0 20px;
+        border-top: 0px solid #000000;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition:
+          max-height 0.5s ease,
+          opacity 0.5s ease,
+          padding 0.5s ease;
+      }
+
+      .accordion-content.active {
+        max-height: 1200px;
+        opacity: 1;
+        padding: 20px;
+        border-top: 1px solid #000000;
+      }
+
+      .input-row {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+      }
+
+      .w-15 {
+        width: 15%;
+      }
+      .w-20 {
+        width: 20%;
+      }
+      .w-50 {
+        width: 50%;
+      }
+      .w-30 {
+        width: 30%;
+      }
+
+      .info-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+      }
+
+      .info-table th,
+      .info-table td {
+        border: 1px solid #000000;
+        padding: 10px;
+        text-align: left;
+      }
+
+      .info-table th {
+        background-color: #000000;
+        color: #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .info-table tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      .th-acciones {
+        border: none !important;
+        background: none !important;
+        width: 80px;
+      }
+
+      .acciones-cell {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        border: none !important;
+        background-color: white !important;
+        box-shadow: none !important;
+      }
+
+      .btn-accion {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        font-size: 1.1rem;
+        transition:
+          transform 0.2s,
+          background 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .btn-accion:hover {
+        background-color: #000;
+        color: #fff;
+        transform: scale(1.2);
+        border-radius: 4px;
+      }
+
+      .btn-accion.btn-borrar:hover {
+        background-color: #800020;
+      }
+
+      .form-group-hidden {
+        display: none;
+        padding: 15px;
+        background-color: #f2f2f2;
+        border: 1px solid #000000;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      input,
+      select {
+        padding: 12px;
+        border: 1px solid #000000;
+        border-radius: 0px;
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 1rem;
+        background-color: #fff;
+      }
+
+      .input-error {
+        border: 2px solid #ff0000 !important;
+        background-color: #fff5f5 !important;
+      }
+
+      .error-text {
+        color: #ff0000;
+        font-size: 0.8rem;
+        font-weight: bold;
+        margin-top: 4px;
+      }
+
+      .checkbox-row {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        width: auto;
+        margin-right: auto;
+      }
+
+      .checkbox-row input {
+        width: auto;
+        cursor: pointer;
+      }
+
+      .btn-enviar {
+        width: fit-content;
+        min-width: 150px;
+        padding: 12px 25px;
+        background-color: #800020;
+        color: #ffffff;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        transition: background 0.3s;
+        align-self: flex-start;
+      }
+
+      .btn-enviar:hover {
+        background-color: #600018;
+      }
+
+      @media (max-width: 800px) {
+        .top-bar,
+        .container {
+          width: 95%;
+        }
+        .btn-enviar {
+          width: 100%;
+        }
+        .input-row {
+          flex-direction: column;
+        }
+        .w-15 .w-20,
+        .w-50,
+        .w-30 {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="titulo-pagina">Parte de servicio</h1>
+
+    <div class="top-bar">
+      <input type="date" id="fecha" class="w-15" style="margin-right: 10px" />
+
+      <select id="turno">
+        <option value="">Turno</option>
+        <option>Mañana</option>
+        <option>Tarde</option>
+        <option>Noche</option>
+      </select>
+
+      <select id="indicativo">
+        <option value="">Indicativo</option>
+        <option>LATINA-10</option>
+        <option>LATINA-20</option>
+        <option>K-5</option>
+      </select>
+
+      <div class="search-container">
+        <input
+          type="text"
+          id="vehiculo"
+          placeholder="Vehículo"
+          oninput="removerError('vehiculo')"
+        />
+        <div id="errorBusqueda-vehiculo"></div>
+      </div>
+
+      <button class="btn-enviar" onclick="validarYEjecutar('vehiculo')">
+        Dar de alta
+      </button>
+    </div>
+
+    <div class="container" id="main-container">
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleSection('sec1')">
+          Funcionarios (<span id="count-funcionarios">0</span>)<span>▼</span>
+        </div>
+        <div id="sec1" class="accordion-content">
+          <table class="info-table" id="tabla-funcionarios">
+            <thead>
+              <tr>
+                <th>Nombre y apellidos</th>
+                <th>Carné</th>
+                <th>Equipo</th>
+                <th class="th-acciones"></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+
+          <hr style="width: 100%; border: 0; border-top: 1px solid #000" />
+
+          <div class="input-row">
+            <input
+              id="nombre"
+              type="text"
+              class="w-50"
+              placeholder="Nombre y apellidos"
+            />
+            <input id="cp" type="text" class="w-20" placeholder="Carné" />
+            <input id="equipo" type="text" class="w-20" placeholder="Equipo" />
+            <label class="checkbox-row">
+              <input id="flagPracticas" type="checkbox" />
+              PP
+            </label>
+          </div>
+          <button class="btn-enviar" onclick="enviarDatos()">
+            Añadir funcionario
+          </button>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleSection('sec2')">
+          Servicios (3)<span>▼</span>
+        </div>
+        <div id="sec2" class="accordion-content">
+          <table class="info-table" id="tabla-servicios">
+            <thead>
+              <tr>
+                <th>Origen</th>
+                <th>Motivo del servicio</th>
+                <th>Hora inicio</th>
+                <th>Hora fin</th>
+                <th>Lugar</th>
+                <th>Resultado</th>
+                <th class="th-acciones"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>BASE</td>
+                <td>RIESGO ALTO</td>
+                <td>08:00</td>
+                <td>15:00</td>
+                <td>Calle Carballino, 54</td>
+                <td>-</td>
+                <td class="acciones-cell">
+                  <button class="btn-accion">✏️</button>
+                  <button class="btn-accion btn-borrar">🗑️</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <hr style="width: 100%; border: 0; border-top: 1px solid #000" />
+
+          <div class="input-row">
+            <input
+              class="w-30"
+              list="origen"
+              id="origen-input"
+              placeholder="Origen"
+            />
+            <datalist id="origen">
+              <option value="H-50"></option>
+              <option value="BASE"></option>
+              <option value="INICIATIVA"></option>
+            </datalist>
+            <input
+              class="w-40"
+              list="motivo"
+              id="motivo-input"
+              placeholder="Motivo del servicio"
+            />
+            <datalist id="motivo">
+              <option value="RIESGO ALTO"></option>
+              <option value="TRASLADO RCD"></option>
+            </datalist>
+            <input
+              type="text"
+              id="horaInicio-input"
+              class="w-15"
+              placeholder="Hora inicio"
+            />
+            <input
+              type="text"
+              id="horaFin-input"
+              class="w-15"
+              placeholder="Hora fin"
+            />
+          </div>
+          <div class="input-row">
+            <input
+              type="text"
+              id="lugar-input-servicio"
+              class="w-50"
+              placeholder="Lugar"
+            />
+            <input
+              type="text"
+              id="resultado-input"
+              class="w-50"
+              placeholder="Resultado"
+            />
+          </div>
+          <button class="btn-enviar" onclick="enviarDatos()">
+            Añadir servicio
+          </button>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleSection('sec3')">
+          Identificados (4) <span>▼</span>
+        </div>
+        <div id="sec3" class="accordion-content">
+          <table class="info-table" id="tabla-filiacion">
+            <thead>
+              <tr>
+                <th>Apellidos y nombre</th>
+                <th>Documento</th>
+                <th>Fecha nac.</th>
+                <th>código</th>
+                <th class="th-acciones"></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+
+          <div class="input-row">
+            <input
+              type="text"
+              id="fili-doc"
+              class="w-20"
+              placeholder="Documento"
+            />
+            <input
+              type="text"
+              id="fili-nombre"
+              class="w-40"
+              placeholder="Nombre"
+            />
+            <input
+              type="text"
+              id="fili-apellidos"
+              class="w-40"
+              placeholder="Apellidos"
+            />
+          </div>
+
+          <div class="input-row">
+            <input
+              type="text"
+              id="fili-nac"
+              class="w-20"
+              placeholder="Fecha nac."
+            />
+            <select id="lenguaje">
+              <option value="">Código (selecciona...)</option>
+              <option value="Sin antecedentes">Sin antecedentes</option>
+              <option value="Nada pendiente">Nada pendiente</option>
+            </select>
+          </div>
+
+          <input
+            list="lugar"
+            id="lugar-input-fili"
+            placeholder="Lugar de filiación"
+          />
+          <datalist id="lugar">
+            <option value="Aluche"></option>
+            <option value="Campamento"></option>
+          </datalist>
+
+          <label class="checkbox-row">
+            <input
+              type="checkbox"
+              id="activarAntecedentes"
+              onchange="toggleInputs('Antecedentes')"
+            />
+            Añadir antecedentes
+          </label>
+
+          <div id="panelAntecedentes" class="form-group-hidden">
+            <label class="checkbox-row"
+              ><input type="checkbox" class="check-ant" data-tipo="rcf" /> Robos
+              con fuerza</label
+            >
+            <label class="checkbox-row"
+              ><input type="checkbox" class="check-ant" data-tipo="rcv" /> Robos
+              con violencia</label
+            >
+            <label class="checkbox-row"
+              ><input type="checkbox" class="check-ant" data-tipo="hurto" />
+              Hurto</label
+            >
+          </div>
+
+          <label class="checkbox-row">
+            <input
+              type="checkbox"
+              id="activarDetenido"
+              onchange="toggleInputs('Detenido')"
+            />
+            Detenido
+          </label>
+          <div id="panelDetenido" class="form-group-hidden">
+            <div class="input-row">
+              <input
+                type="text"
+                id="det-atestado"
+                class="w-20"
+                placeholder="Atestado"
+              />
+              <input
+                type="text"
+                id="det-motivo"
+                class="w-60"
+                placeholder="Motivo"
+              />
+            </div>
+          </div>
+
+          <label class="checkbox-row">
+            <input
+              type="checkbox"
+              id="activarSancionado"
+              onchange="toggleInputs('Sancionado')"
+            />
+            Sancionado
+          </label>
+          <div id="panelSancionado" class="form-group-hidden">
+            <div class="input-row">
+              <input
+                type="text"
+                id="san-acta"
+                class="w-20"
+                placeholder="Número de acta"
+              />
+              <input
+                type="text"
+                id="san-motivo"
+                class="w-60"
+                placeholder="Motivo"
+              />
+            </div>
+          </div>
+
+          <button class="btn-enviar" onclick="enviarDatos()">
+            Añadir identificado
+          </button>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleSection('sec4')">
+          Vehículos y objetos (2) <span>▼</span>
+        </div>
+        <div id="sec4" class="accordion-content">
+          <table class="info-table" id="tabla-objetos">
+            <thead>
+              <tr>
+                <th>Placa /Nº serie / IMEI</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Identificado</th>
+                <th>Código</th>
+                <th class="th-acciones"></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+
+          <div class="input-row">
+            <input type="text" id="obj-id" class="w-20" placeholder="Placa" />
+            <input
+              type="text"
+              id="obj-marca"
+              class="w-20"
+              placeholder="Marca"
+            />
+            <input
+              type="text"
+              id="obj-modelo"
+              class="w-20"
+              placeholder="Modelo"
+            />
+            <input
+              type="text"
+              id="obj-filiado"
+              class="w-20"
+              placeholder="Identificado"
+            />
+            <select class="w-20" id="codigo-obj">
+              <option value="">Código (selecciona...)</option>
+              <option value="Sin señalamientos">Sin señalamientos</option>
+            </select>
+          </div>
+
+          <button class="btn-enviar" onclick="enviarDatos()">
+            Añadir objeto
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // 1. Estructura de datos global
+      let parteServicio = {
+        fecha: "",
+        turno: "",
+        horario: "",
+        indicativo: "",
+        vehiculo: "",
+        funcionarios: [],
+        servicios: [],
+        filiacion: [],
+        objetos: [],
+      };
+
+      // --- LÓGICA DE RENDERIZADO UNIVERSAL ---
+      function renderizarTablas() {
+        // 1. Render Funcionarios
+        const tbodyFunc = document.querySelector("#tabla-funcionarios tbody");
+        document.getElementById("count-funcionarios").innerText =
+          parteServicio.funcionarios.length;
+        tbodyFunc.innerHTML = parteServicio.funcionarios
+          .map(
+            (f, i) => `
+      <tr>
+        <td>${f.nombre} ${f.flagPracticas ? '<span style="color: #800020; font-weight: bold;">(PP)</span>' : ""}</td>
+        <td>${f.cp}</td>
+        <td>${f.equipo}</td>
+        <td class="acciones-cell">
+          <button class="btn-accion btn-borrar" onclick="eliminarItem('funcionarios', ${i})">🗑️</button>
+        </td>
+      </tr>`,
+          )
+          .join("");
+
+        // 2. Render Servicios
+        const tbodyServ = document.querySelector("#tabla-servicios tbody");
+        tbodyServ.innerHTML = parteServicio.servicios
+          .map(
+            (s, i) => `
+      <tr>
+        <td>${s.origen}</td>
+        <td>${s.motivo}</td>
+        <td>${s.inicio}</td>
+        <td>${s.fin}</td>
+        <td>${s.lugar}</td>
+        <td>${s.resultado}</td>
+        <td class="acciones-cell">
+          <button class="btn-accion btn-borrar" onclick="eliminarItem('servicios', ${i})">🗑️</button>
+        </td>
+      </tr>`,
+          )
+          .join("");
+
+        // 3. Render Identificados
+        const tbodyFili = document.querySelector("#tabla-filiacion tbody");
+        tbodyFili.innerHTML = parteServicio.filiacion
+          .map(
+            (f, i) => `
+      <tr>
+        <td>${f.apellidos}, ${f.nombre}</td>
+        <td>${f.doc}</td>
+        <td>${f.nac}</td>
+        <td>${f.codigo}</td>
+        <td class="acciones-cell">
+          <button class="btn-accion btn-borrar" onclick="eliminarItem('filiacion', ${i})">🗑️</button>
+        </td>
+      </tr>`,
+          )
+          .join("");
+
+        // 4. Render Objetos
+        const tbodyObj = document.querySelector("#tabla-objetos tbody");
+        tbodyObj.innerHTML = parteServicio.objetos
+          .map(
+            (o, i) => `
+      <tr>
+        <td>${o.id}</td>
+        <td>${o.marca}</td>
+        <td>${o.modelo}</td>
+        <td>${o.filiado}</td>
+        <td>${o.codigo}</td>
+        <td class="acciones-cell">
+          <button class="btn-accion btn-borrar" onclick="eliminarItem('objetos', ${i})">🗑️</button>
+        </td>
+      </tr>`,
+          )
+          .join("");
+      }
+
+      function eliminarItem(arrayName, index) {
+        parteServicio[arrayName].splice(index, 1);
+        renderizarTablas();
+      }
+
+      // --- CAPTURA DE DATOS DINÁMICA ---
+      function enviarDatos() {
+        // Identificar desde qué sección se pulsa el botón
+        const btnActivo = event.target;
+        const sectionId = btnActivo.closest(".accordion-content").id;
+
+        if (sectionId === "sec1") {
+          const nuevo = {
+            nombre: document.getElementById("nombre").value,
+            cp: document.getElementById("cp").value,
+            equipo: document.getElementById("equipo").value,
+            flagPracticas: document.getElementById("flagPracticas").checked,
+          };
+          if (nuevo.nombre && nuevo.cp) {
+            parteServicio.funcionarios.push(nuevo);
+            document.getElementById("nombre").value = "";
+            document.getElementById("cp").value = "";
+          }
+        } else if (sectionId === "sec2") {
+          const nuevo = {
+            origen: document.getElementById("origen-input").value,
+            motivo: document.getElementById("motivo-input").value,
+            inicio: document.getElementById("horaInicio-input").value,
+            fin: document.getElementById("horaFin-input").value,
+            lugar: document.getElementById("lugar-input-servicio").value,
+            resultado: document.getElementById("resultado-input").value,
+          };
+          parteServicio.servicios.push(nuevo);
+        } else if (sectionId === "sec3") {
+          const nuevo = {
+            doc: document.getElementById("fili-doc").value,
+            nombre: document.getElementById("fili-nombre").value,
+            apellidos: document.getElementById("fili-apellidos").value,
+            nac: document.getElementById("fili-nac").value,
+            codigo: document.getElementById("lenguaje").value,
+            // Aquí podrías añadir lógica para capturar los paneles ocultos (antecedentes, etc)
+          };
+          parteServicio.filiacion.push(nuevo);
+        } else if (sectionId === "sec4") {
+          const nuevo = {
+            id: document.getElementById("obj-id").value,
+            marca: document.getElementById("obj-marca").value,
+            modelo: document.getElementById("obj-modelo").value,
+            filiado: document.getElementById("obj-filiado").value,
+            codigo: document.getElementById("codigo-obj").value,
+          };
+          parteServicio.objetos.push(nuevo);
+        }
+
+        renderizarTablas();
+      }
+
+      // --- FUNCIONES DE SOPORTE (UI) ---
+      function toggleSection(id) {
+        document.getElementById(id).classList.toggle("active");
+      }
+
+      function toggleInputs(name) {
+        const checkbox = document.getElementById("activar" + name);
+        const panel = document.getElementById("panel" + name);
+        panel.style.display = checkbox.checked ? "flex" : "none";
+      }
+
+      function removerError(id) {
+        const input = document.getElementById(id);
+        if (input.value.trim() !== "") {
+          input.classList.remove("input-error");
+          document.getElementById("errorBusqueda-" + id).innerHTML = "";
+        }
+      }
+
+      function validarYEjecutar(id) {
+        const inputVehiculo = document.getElementById(id);
+        const fecha = document.getElementById("fecha").value;
+        if (inputVehiculo.value.trim() === "" || fecha === "") {
+          inputVehiculo.classList.add("input-error");
+          document.getElementById("errorBusqueda-" + id).innerHTML =
+            '<span class="error-text">Campo obligatorio</span>';
+          return;
+        }
+
+        parteServicio.fecha = document.getElementById("fecha").value;
+        parteServicio.turno = document.getElementById("turno").value;
+        parteServicio.indicativo = document.getElementById("indicativo").value;
+        parteServicio.vehiculo = inputVehiculo.value;
+
+        // Mostrar las tablas
+        document.getElementById("main-container").style.display = "block";
+        alert("Servicio iniciado. Ahora puede completar las secciones.");
+      }
+
+      window.onload = renderizarTablas;
+    </script>
+  </body>
+</html>

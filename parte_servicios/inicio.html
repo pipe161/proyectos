@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GOR - Panel de Gestión</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="header-container"></div>
+
+    <script>
+      fetch("header.html")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("header-container").innerHTML = data;
+        });
+
+      function abrirMenu() {
+        document.getElementById("sidebar").classList.add("active");
+        document.getElementById("overlay").classList.add("active");
+      }
+      function cerrarMenu() {
+        document.getElementById("sidebar").classList.remove("active");
+        document.getElementById("overlay").classList.remove("active");
+      }
+    </script>
+
+    <h1 class="titulo-pagina">Visor de Partes</h1>
+
+    <div class="date-nav-container">
+      <button id="prevDay" class="btn-nav">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div style="position: relative">
+        <span id="current-date">--/--/----</span>
+        <input type="date" id="datepicker" />
+      </div>
+      <button id="nextDay" class="btn-nav">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <div class="content">
+      <table class="info-table">
+        <thead>
+          <tr>
+            <th>Turno</th>
+            <th>Indicativo</th>
+            <th>Vehículo</th>
+            <th>Dotación (CP)</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-cuerpo"></tbody>
+      </table>
+    </div>
+
+    <a href="parte_servicio.html" class="fab-rojo" title="Crear Nuevo Parte">
+      <i class="fas fa-plus"></i>
+    </a>
+
+    <script>
+      let fechaActual = new Date();
+      const datePicker = document.getElementById("datepicker");
+      const dateDisplay = document.getElementById("current-date");
+
+      dateDisplay.onclick = () => datePicker.showPicker();
+      datePicker.onchange = (e) => {
+        if (e.target.value) {
+          fechaActual = new Date(e.target.value);
+          actualizar();
+        }
+      };
+
+      async function cargarPartes() {
+        const yyyy = fechaActual.getFullYear();
+        const mm = String(fechaActual.getMonth() + 1).padStart(2, "0");
+        const dd = String(fechaActual.getDate()).padStart(2, "0");
+        const tbody = document.getElementById("tabla-cuerpo");
+
+        try {
+          const res = await fetch(
+            `/obtener-partes?yyyy=${yyyy}&mm=${mm}&dd=${dd}`,
+          );
+          const partes = await res.json();
+
+          tbody.innerHTML = partes.length
+            ? ""
+            : '<tr><td colspan="4" style="text-align:center; padding: 40px;">No se han encontrado registros para esta fecha.</td></tr>';
+
+          partes.forEach((p) => {
+            const tr = document.createElement("tr");
+            tr.style.cursor = "pointer";
+            const cps = p.funcionarios
+              ? p.funcionarios.map((f) => f.cp).join(", ")
+              : "---";
+            tr.innerHTML = `<td><b>${p.turno}</b></td><td>${p.indicativo}</td><td>${p.vehiculo}</td><td>${cps}</td>`;
+            tr.onclick = () => {
+              const fName = `${yyyy}-${mm}-${dd}_${p.turno}_${p.indicativo}`
+                .toUpperCase()
+                .replace(/\s+/g, "_");
+              window.location.href = `parte_servicio.html?fichero=${fName}`;
+            };
+            tbody.appendChild(tr);
+          });
+        } catch (e) {
+          tbody.innerHTML =
+            '<tr><td colspan="4" style="color:red; text-align:center;">Error de conexión con el servidor.</td></tr>';
+        }
+      }
+
+      function actualizar() {
+        dateDisplay.textContent = `${String(fechaActual.getDate()).padStart(2, "0")}/${String(fechaActual.getMonth() + 1).padStart(2, "0")}/${fechaActual.getFullYear()}`;
+        datePicker.value = fechaActual.toISOString().split("T")[0];
+        cargarPartes();
+      }
+
+      document.getElementById("prevDay").onclick = () => {
+        fechaActual.setDate(fechaActual.getDate() - 1);
+        actualizar();
+      };
+      document.getElementById("nextDay").onclick = () => {
+        fechaActual.setDate(fechaActual.getDate() + 1);
+        actualizar();
+      };
+
+      actualizar();
+    </script>
+  </body>
+</html>

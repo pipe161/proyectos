@@ -1,0 +1,29 @@
+En lugar de un backend real, usaremos json-server.
+Crea un archivo llamado db.json en la raíz de tu proyecto:
+Para ejecutarlo, usa: json-server --watch db.json --port 3000
+
+Diagrama:
+
++---------------------+           +--------------------------+
+|    Mock API (JSON)  | <-------> |    TaskService (REST)    |
+|   (db.json:3000)    |           |  (Injectable Singleton)  |
++---------------------+           +------------+-------------+
+                                               |
+                                     (Observable / Data)
+                                               |
++----------------------------------------------v-------------+
+|                TaskListComponent (Container)               |
+|  - Estado: signal<Task[]>                                  |
+|  - Lógica: Consumo de Servicio                             |
+|                                                            |
+|    +------------------------+    +------------------------+ |
+|    |    TaskItemComponent   |    |    TaskItemComponent   | |
+|    | (Input: Task object)   |    | (Input: Task object)   | |
+|    +------------------------+    +------------------------+ |
++------------------------------------------------------------+
+
+Carga inicial: AppComponent inicializa, TaskListComponent se carga, dispara ngOnInit, y llama al TaskService.
+
+Reactividad: El TaskService hace la petición HTTP. El Interceptor vigila el estado de la red.
+
+UI: Los datos llegan, la signal se actualiza y el DOM se renderiza automáticamente gracias al nuevo Control Flow (@for).

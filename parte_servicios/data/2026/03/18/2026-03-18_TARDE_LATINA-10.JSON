@@ -1,0 +1,36 @@
+{
+  "fecha": "2026-03-18",
+  "turno": "Tarde",
+  "indicativo": "LATINA-10",
+  "vehiculo": "4322",
+  "funcionarios": [
+    {
+      "nombre": "Don uno",
+      "cp": "11111",
+      "equipo": "111",
+      "flagPracticas": false
+    },
+    {
+      "nombre": "LUIS FELIPE HERNANDEZ ROSA",
+      "cp": "149893",
+      "equipo": "442",
+      "flagPracticas": true
+    }
+  ],
+  "servicios": [],
+  "filiacion": [
+    {
+      "documento": "Y1231231R",
+      "nombre": "RONALDO",
+      "apellidos": "VILLALOBOS",
+      "fechaNac": "2001-12-12",
+      "codigo": "Sin antecedentes",
+      "lugarFiliacion": "Aluche",
+      "fechaFiliacion": "",
+      "antecedentes": [],
+      "detenido": [],
+      "sancionado": []
+    }
+  ],
+  "objetos": []
+}

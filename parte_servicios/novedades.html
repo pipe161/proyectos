@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GOR - Novedades Completas</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .excel-container {
+        background: #f4f7f6;
+        padding: 20px;
+        font-family: "Segoe UI", Arial, sans-serif;
+      }
+      .sheet {
+        background: white;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: 0 auto;
+        max-width: 1400px;
+        padding: 20px;
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        font-size: 11px;
+        table-layout: fixed;
+      }
+      th,
+      td {
+        border: 1px solid #bdc3c7;
+        padding: 4px 6px;
+        word-wrap: break-word;
+        vertical-align: top;
+      }
+
+      /* Cabeceras */
+      .header-main {
+        background: #2c3e50;
+        color: white;
+        font-size: 14px;
+        text-align: center;
+        font-weight: bold;
+      }
+      .header-section {
+        background: #34495e;
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-align: center;
+      }
+      .header-turn {
+        background: #ecf0f1;
+        font-weight: bold;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 12px;
+      }
+
+      /* Estilos de celdas */
+      .label {
+        background: #f9f9f9;
+        font-weight: bold;
+        width: 150px;
+      }
+      .value {
+        text-align: center;
+      }
+      .highlight-red {
+        background: #f9ebea;
+        color: #c0392b;
+        font-weight: bold;
+      }
+      .highlight-blue {
+        background: #ebf5fb;
+        color: #2980b9;
+        font-weight: bold;
+      }
+
+      /* Grid para las 3 columnas de turnos */
+      .turnos-grid {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .turno-col {
+        flex: 1;
+        min-width: 300px;
+      }
+      .turno-col h3 {
+        font-size: 12px;
+        margin: 5px 0;
+        text-align: center;
+        background: #eee;
+        padding: 4px;
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header-container"></div>
+    <script>
+      fetch("header.html")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("header-container").innerHTML = data;
+        });
+      function abrirMenu() {
+        document.getElementById("sidebar").classList.add("active");
+        document.getElementById("overlay").classList.add("active");
+      }
+      function cerrarMenu() {
+        document.getElementById("sidebar").classList.remove("active");
+        document.getElementById("overlay").classList.remove("active");
+      }
+    </script>
+
+    <h1 class="titulo-pagina">Parte de Novedades GOR - 17/03/2026</h1>
+
+    <div class="content">
+      <div class="sheet">
+        <table>
+          <tr>
+            <td colspan="7" class="header-main">
+              NOVEDADES OPERATIVAS - FECHA: 17/03/2026
+            </td>
+          </tr>
+          <tr>
+            <td class="label">TURNO TRABAJANDO</td>
+            <td colspan="2" class="value">MAÑANA (C)</td>
+            <td colspan="2" class="value">TARDE (A)</td>
+            <td colspan="2" class="value">NOCHE (N3)</td>
+          </tr>
+          <tr class="header-turn">
+            <td>RESPONSABLE</td>
+            <td colspan="2">MAÑANA</td>
+            <td colspan="2">TARDE</td>
+            <td colspan="2">NOCHE</td>
+          </tr>
+          <tr>
+            <td class="label">E. EJECUTIVA</td>
+            <td colspan="2">--</td>
+            <td colspan="2">--</td>
+            <td colspan="2" class="value">74379</td>
+          </tr>
+          <tr>
+            <td class="label">E. BÁSICA</td>
+            <td colspan="2" class="value">111192</td>
+            <td colspan="2" class="value">123050</td>
+            <td colspan="2" class="value">99159</td>
+          </tr>
+          <tr>
+            <td class="label">GOR / GAC</td>
+            <td colspan="2" class="value">6 / 2</td>
+            <td colspan="2" class="value">5 / 2</td>
+            <td colspan="2" class="value">2 / 3</td>
+          </tr>
+        </table>
+
+        <table>
+          <tr class="header-section">
+            <td colspan="7">Estadísticas de Seguridad</td>
+          </tr>
+          <tr class="header-turn">
+            <td>CATEGORÍA</td>
+            <td>ESP. (M)</td>
+            <td>EXT. (M)</td>
+            <td>ESP. (T)</td>
+            <td>EXT. (T)</td>
+            <td>ESP. (N)</td>
+            <td>EXT. (N)</td>
+          </tr>
+          <tr>
+            <td class="label">IDENTIFICADOS</td>
+            <td class="value">17</td>
+            <td class="value">10</td>
+            <td class="value">13</td>
+            <td class="value">13</td>
+            <td class="value">7</td>
+            <td class="value">2</td>
+          </tr>
+          <tr>
+            <td class="label">ACTAS DROGAS</td>
+            <td colspan="2" class="value">--</td>
+            <td colspan="2" class="value">6</td>
+            <td colspan="2" class="value">1</td>
+          </tr>
+          <tr>
+            <td class="label">VEHÍCULOS CONSULT.</td>
+            <td colspan="2" class="value">16</td>
+            <td colspan="2" class="value">5</td>
+            <td colspan="2" class="value">11</td>
+          </tr>
+        </table>
+
+        <div class="header-section" style="padding: 5px; margin-bottom: 5px">
+          Distribución de Indicativos y Equipos
+        </div>
+        <div class="turnos-grid">
+          <div class="turno-col">
+            <h3>MAÑANA</h3>
+            <table>
+              <tr>
+                <th>IND.</th>
+                <th>VEH.</th>
+                <th>CPs</th>
+              </tr>
+              <tr>
+                <td>L10</td>
+                <td>2234ZB</td>
+                <td>122475/130640</td>
+              </tr>
+              <tr>
+                <td>L20</td>
+                <td>2074BC</td>
+                <td>136462/150484</td>
+              </tr>
+              <tr>
+                <td>L30</td>
+                <td>2073BC</td>
+                <td>134391/150143</td>
+              </tr>
+              <tr>
+                <td>K5</td>
+                <td>6977NCT</td>
+                <td>127459/136867</td>
+              </tr>
+              <tr>
+                <td>K6</td>
+                <td>3535LGT</td>
+                <td>111192/122923</td>
+              </tr>
+              <tr>
+                <td>SEG.</td>
+                <td>--</td>
+                <td>136123/138495</td>
+              </tr>
+            </table>
+          </div>
+          <div class="turno-col">
+            <h3>TARDE</h3>
+            <table>
+              <tr>
+                <th>IND.</th>
+                <th>VEH.</th>
+                <th>CPs</th>
+              </tr>
+              <tr>
+                <td>L10</td>
+                <td>2234</td>
+                <td>123050/150061</td>
+              </tr>
+              <tr>
+                <td>L20</td>
+                <td>2236</td>
+                <td>137508/150698</td>
+              </tr>
+              <tr>
+                <td>L30</td>
+                <td>2073</td>
+                <td>134142/149489</td>
+              </tr>
+              <tr>
+                <td>L40</td>
+                <td>2235</td>
+                <td>130369/149563</td>
+              </tr>
+              <tr>
+                <td>K5</td>
+                <td>6977</td>
+                <td>101813/134199</td>
+              </tr>
+              <tr>
+                <td>SEG.</td>
+                <td>--</td>
+                <td>84837/134093</td>
+              </tr>
+            </table>
+          </div>
+          <div class="turno-col">
+            <h3>NOCHE</h3>
+            <table>
+              <tr>
+                <th>IND.</th>
+                <th>VEH.</th>
+                <th>CPs</th>
+              </tr>
+              <tr>
+                <td>COORD.</td>
+                <td>--</td>
+                <td>74379</td>
+              </tr>
+              <tr>
+                <td>L10</td>
+                <td>2234</td>
+                <td>99159/100400</td>
+              </tr>
+              <tr>
+                <td>L20</td>
+                <td>3101</td>
+                <td>135943/13665...</td>
+              </tr>
+              <tr>
+                <td>SEG.</td>
+                <td>--</td>
+                <td>126030/139514</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="header-section" style="padding: 5px; margin-bottom: 5px">
+          Servicios de Base [cite: 2]
+        </div>
+        <div class="turnos-grid">
+          <div class="turno-col">
+            <table>
+              <tr class="header-turn">
+                <td colspan="2">MAÑANA</td>
+              </tr>
+              <tr>
+                <td>P. Catalizadores</td>
+                <td>L10/L20 [cite: 3, 4]</td>
+              </tr>
+              <tr>
+                <td>Habeas Corpus</td>
+                <td>L30 [cite: 4]</td>
+              </tr>
+              <tr class="highlight-red">
+                <td>Riesgo Extremo</td>
+                <td>C/ Trompas 6 (K5, L10) [cite: 4]</td>
+              </tr>
+              <tr>
+                <td>Citación</td>
+                <td>C/ Fortuna (Positivo) [cite: 4]</td>
+              </tr>
+              <tr>
+                <td>Filiación Georgianas</td>
+                <td>L10 (Parte 145467)</td>
+              </tr>
+            </table>
+          </div>
+          <div class="turno-col">
+            <table>
+              <tr class="header-turn">
+                <td colspan="2">TARDE</td>
+              </tr>
+              <tr>
+                <td>Op. Bandas Juv.</td>
+                <td>En servicio [cite: 4]</td>
+              </tr>
+              <tr>
+                <td>Víctima UFAM</td>
+                <td>K5 [cite: 4]</td>
+              </tr>
+              <tr>
+                <td>Citación L10</td>
+                <td>C/ Quero (Parte 145851) [cite: 5]</td>
+              </tr>
+              <tr>
+                <td>Custodia Hosp.</td>
+                <td>L10, 20, 30, 40</td>
+              </tr>
+              <tr>
+                <td>Efectos extrav.</td>
+                <td>L40 (146393)</td>
+              </tr>
+            </table>
+          </div>
+          <div class="turno-col">
+            <table>
+              <tr class="header-turn">
+                <td colspan="2">NOCHE</td>
+              </tr>
+              <tr>
+                <td>P. Bandas Juv.</td>
+                <td>En servicio [cite: 2]</td>
+              </tr>
+              <tr>
+                <td>C/ Cullera</td>
+                <td>Atención especial [cite: 4]</td>
+              </tr>
+              <tr>
+                <td>Filtro Seguridad</td>
+                <td>Crta. Boadilla (146786) [cite: 4]</td>
+              </tr>
+              <tr>
+                <td>Acta Droga</td>
+                <td>L20 (204796) [cite: 4]</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="header-section" style="padding: 5px; margin-bottom: 5px">
+          Riesgos UFAM
+        </div>
+        <div class="turnos-grid">
+          <div class="turno-col">
+            <table>
+              <tr>
+                <td>Navalmoral 31</td>
+                <td>L10 (Alto)</td>
+              </tr>
+              <tr class="highlight-red">
+                <td>C/ Trompas 6</td>
+                <td>K5 (Extremo)</td>
+              </tr>
+            </table>
+          </div>
+          <div class="turno-col">
+            <table>
+              <tr>
+                <td>Solana de Luche</td>
+                <td>L40 (Alto)</td>
+              </tr>
+              <tr>
+                <td>C/ Árbol del Cielo</td>
+                <td>L10 (Alto)</td>
+              </tr>
+            </table>
+          </div>
+          <div class="turno-col">
+            <table>
+              <tr>
+                <td>Navalmoral 31</td>
+                <td>L10 (Alto)</td>
+              </tr>
+              <tr>
+                <td>C/ Trompas 6</td>
+                <td>L20 (Alto)</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="header-section" style="padding: 5px; margin-bottom: 5px">
+          Servicios H50
+        </div>
+        <table>
+          <tr class="header-turn">
+            <td>UBICACIÓN</td>
+            <td>TURNO</td>
+            <td>DETALLE / ATESTADO</td>
+          </tr>
+          <tr>
+            <td>Calle Pericles 30</td>
+            <td>MAÑANA</td>
+            <td>Ataque ansiedad (L40/L20)</td>
+          </tr>
+          <tr>
+            <td>C/ Valbanera 138</td>
+            <td>MAÑANA</td>
+            <td>Recuperación Airpods (L1/L40)</td>
+          </tr>
+          <tr>
+            <td>Colonia Jardín</td>
+            <td>NOCHE</td>
+            <td>Mujer golpeando vehículo (146835)</td>
+          </tr>
+          <tr class="highlight-blue">
+            <td>Calle Trompas 6H</td>
+            <td>MAÑANA</td>
+            <td>Discusión doméstica (Parte 145147) [cite: 8]</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
